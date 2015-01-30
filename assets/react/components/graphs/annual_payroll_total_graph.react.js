@@ -18,6 +18,7 @@ var drawTotalGraph = function(variable, totals) {
             .showLegend(false)
             ;
 
+
         chart.xAxis
             .axisLabel('Year');
 
