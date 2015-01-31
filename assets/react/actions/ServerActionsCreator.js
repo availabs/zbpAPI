@@ -60,7 +60,7 @@ module.exports = {
     });
   },
   receiveTotals: function(varName, data) {
-    console.log(data);
+    console.log("data",data);
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,

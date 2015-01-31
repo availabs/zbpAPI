@@ -3,15 +3,15 @@ var React = require('react');
 var ZBPStore = require('../../stores/ZBPStore');
 var nv = require('../../../../node_modules/nvd3/nv.d3');
 var d3 = require('../../../../node_modules/d3/d3');
-
+console.log(nv);
 
 var drawTotalGraph = function(variable, totals) {
-    console.log(nv);
+    console.log("totals", totals);
     nv.addGraph(function() {
         var chart = nv.models.multiBarChart()
             .transitionDuration(350)
             .reduceXTicks(true)
-            rotateLabels(0)
+            .rotateLabels(0)
             .showControls(false)
             .groupSpacing(0.1)
             .stacked(true)
@@ -27,7 +27,7 @@ var drawTotalGraph = function(variable, totals) {
 
 
 
-        d3.append('#total_chart svg')
+        d3.select('body').append('svg')
             .datum(parseTotalData(totals))
             .call(chart);
 
@@ -38,9 +38,8 @@ var drawTotalGraph = function(variable, totals) {
 };
 
 var parseTotalData = function(data) {
-    console.log(data);
     var toRet = [];
-
+    console.log(typeof data[Object.keys(data)[0]])
     if(typeof data[Object.keys(data)[0]] == "object") { //If we have more than one year. Should only be this case for drawing a line chart.
         for(var yr in data) {
             for(var zip in yr) {
@@ -94,7 +93,9 @@ var Graph = React.createClass({
         return (
         	<div className="content container">
             	Hello World
-                {drawTotalGraph(this.state.variable, this.state.totals)}
+                {this.state.variable}
+                {this.state.totals}
+                //{drawTotalGraph(this.state.variable, this.state.totals)}
         	</div>
         );
     }

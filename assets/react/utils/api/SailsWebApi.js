@@ -13,7 +13,7 @@ var ServerActionCreators = require('../../actions/ServerActionsCreator');
 module.exports = {
 
   initAdmin: function(user){
-    this.zpbTotals("annual_payroll",["12211", "12110", "12108"]);
+    this.zpbTotals("annual_payroll",["12211", "12110", "12108"], "");
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
@@ -84,6 +84,7 @@ module.exports = {
     var zipPost = {'zips':zips}
 
     io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
+      console.log('resdata', resData);
       console.timeEnd('loadTotals');
       ServerActionCreators.receiveTotals(type,resData);
     });
