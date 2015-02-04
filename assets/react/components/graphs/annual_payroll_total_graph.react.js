@@ -7,35 +7,40 @@ console.log(nv);
 
 var drawTotalGraph = function(variable, totals) {
     console.log("totals", totals);
-    nv.addGraph(function() {
-        var chart = nv.models.lineChart()
-            .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
-            .useInteractiveGuideline(true)  //We want nice looking tooltips and a guideline!
-            .transitionDuration(350)  //how fast do you want the lines to transition?
-            .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
-            .showYAxis(true)        //Show the y-axis
-            .showXAxis(true)   
-            ;
+    if(totals == {}) { //!totals doesn't work for some reason?
+        return "";
+    }
+    else {
+        nv.addGraph(function() {
+            var chart = nv.models.lineChart()
+                .margin({left: 100})  //Adjust chart margins to give the x-axis some breathing room.
+                .useInteractiveGuideline(true)  //We want nice looking tooltips and a guideline!
+                .transitionDuration(350)  //how fast do you want the lines to transition?
+                .showLegend(true)       //Show the legend, allowing users to turn on/off line series.
+                .showYAxis(true)        //Show the y-axis
+                .showXAxis(true)   
+                ;
 
 
-        chart.xAxis
-            .axisLabel('Year');
+            chart.xAxis
+                .axisLabel('Year');
 
-        chart.yAxis
-            .axisLabel("Total Annual Payroll (thousands of dollars)")
-            //.axisLabel(variable); //SHOULD BE THIS, but it needs to be switch-ed into a sexier format, since it comes as annual_payroll.
+            chart.yAxis
+                .axisLabel("Total Annual Payroll (thousands of dollars)")
+                //.axisLabel(variable); //SHOULD BE THIS, but it needs to be switch-ed into a sexier format, since it comes as annual_payroll.
 
 
 
-        d3.select('body').append('svg')
-            .datum(parseTotalData(totals))
-            .attr("height", "500px")
-            .call(chart);
+            d3.select('body').append('svg')
+                .datum(parseTotalData(totals))
+                .attr("height", "500px")
+                .call(chart);
 
-        nv.utils.windowResize(chart.update);
+            nv.utils.windowResize(chart.update);
 
-        return chart;
-    });
+            return chart;
+        });
+    }
 };
 
 var parseTotalData = function(data) {
@@ -86,7 +91,7 @@ var parseTotalData = function(data) {
 
     }
     else { //shouldn't happen w/ line chart demo.
-        console.log("You screwed up, Alan.")
+        console.log("Data != object! or something.")
     }
     /*for(var i in data) {
 
