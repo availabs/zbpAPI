@@ -14,6 +14,7 @@ module.exports = {
 
   initAdmin: function(user){
     this.zpbTotals("annual_payroll",["12211", "12110", "12108"], "");
+    this.zbpDetails(["12211", "12110", "12108"], false, false); //as optional params
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
@@ -84,9 +85,23 @@ module.exports = {
     var zipPost = {'zips':zips}
 
     io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
-      console.log('resdata', resData);
+      console.log('resdata totals', resData);
       console.timeEnd('loadTotals');
       ServerActionCreators.receiveTotals(type,resData);
+    });
+  },
+  zbpDetails: function(zips, year, naics) {
+    console.time('load Details');
+    console.log('zbpDetails', zips);
+
+    var yearPath = year || '';
+    var zipPost = {'zips':zips}
+    naics = naics  || '';
+    console.log('/details/' + naics + '' + yearPath)
+    io.socket.post('/details/' + naics + '' + yearPath, zipPost, function(resData) {
+      console.log('resdata- details', resData);
+      console.timeEnd('load Details');
+      ServerActionCreators.receiveDetails(resData);
     });
   },
   zipList: function() {

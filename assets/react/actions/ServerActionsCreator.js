@@ -60,11 +60,18 @@ module.exports = {
     });
   },
   receiveTotals: function(varName, data) {
-    console.log("data",data);
+    //console.log("data",data);
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,
       totals: data
+    });
+  },
+  receiveDetails: function(data) {
+    //console.log("Details data", data);
+    AppDispatcher.handleServerAction({
+      type:ActionTypes.RECEIVE_DETAILS,
+      details: data
     });
   }
 };
