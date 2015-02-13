@@ -59,12 +59,21 @@ module.exports = {
       zipcodes: data
     });
   },
-  receiveTotals: function(varName, data) {
-    console.log("data",data);
+  receiveTotals: function(varName, data, zip) {
+    //console.log("data",data);
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,
-      totals: data
+      totals: data,
+      zip: zip
+    });
+  },
+  receiveDetails: function(data, zip) {
+    //console.log("Details data", data);
+    AppDispatcher.handleServerAction({
+      type:ActionTypes.RECEIVE_DETAILS,
+      details: data,
+      zip: zip
     });
   }
 };

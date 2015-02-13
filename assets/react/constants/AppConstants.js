@@ -18,6 +18,7 @@ module.exports = {
     SET_APP_SECTION:null,
     RECEIVE_ZIPCODES:null,
     RECEIVE_TOTALS:null,
+    RECEIVE_DETAILS:null,
     //-------User--------------------------------------------
     RECEIVE_USERS: null,
     SET_SESSION_USER:null,
