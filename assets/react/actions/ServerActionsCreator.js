@@ -75,5 +75,12 @@ module.exports = {
       details: data,
       zip: zip
     });
+  },
+  receiveDetails: function(data) {
+    //console.log("Details data", data);
+    AppDispatcher.handleServerAction({
+      type:ActionTypes.RECEIVE_DETAILS,
+      details: data
+    });
   }
 };

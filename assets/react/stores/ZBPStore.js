@@ -90,7 +90,7 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     case ActionTypes.RECEIVE_DETAILS:
       _details = action.details.data;
       _zip = action.zip;
-      console.log(_details);
+
       zbpStore.emitChange();
     break;
     default:
