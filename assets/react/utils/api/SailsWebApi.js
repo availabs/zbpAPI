@@ -9,13 +9,20 @@
 var io = require('./sails.io.js')();
 var ServerActionCreators = require('../../actions/ServerActionsCreator');
 
+var defaults = {
+  variable: "annual_payroll",
+  zip: ["12110"],
+  year: "",
+  naics: "72"
+}
 
 module.exports = {
 
   initAdmin: function(user){
-    this.zpbTotals("annual_payroll",["12110"], "");
-    this.zbpDetails(["12110"], false, "72"); //as optional params
-    
+
+    this.zpbTotals(defaults.variable, defaults.zip, defaults.year);
+    this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
+
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
@@ -79,44 +86,20 @@ module.exports = {
   //---------------------------------------------------
   zpbTotals: function(type,zips,year){ //Should be only one zip!
     
-    console.time('loadTotals');
-    
-    console.log('zbpTotals',zips);
     var yearPath = year || '';
     var zipPost = {'zips':zips}
 
     io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
-      console.log('resdata totals', resData);
-      console.timeEnd('loadTotals');
       ServerActionCreators.receiveTotals(type,resData, zips[0]);
     });
   },
   zbpDetails: function(zips, year, naics) {
-    console.time('load Details');
-    console.log('zbpDetails', zips);
 
     var yearPath = year || '';
     var zipPost = {'zips':zips};
 
-    console.log('/details/' + naics + '' + yearPath)
     io.socket.post('/details/' + naics + '' + yearPath, zipPost, function(resData) {
-      console.log('resdata- details', resData);
-      console.timeEnd('load Details');
-      ServerActionCreators.receiveDetails(resData, zips[0]);
-    });
-  },
-  zbpDetails: function(zips, year, naics) {
-    console.time('load Details');
-    console.log('zbpDetails', zips);
-
-    var yearPath = year || '';
-    var zipPost = {'zips':zips}
-    naics = naics  || '';
-    console.log('/details/' + naics + '' + yearPath)
-    io.socket.post('/details/' + naics + '' + yearPath, zipPost, function(resData) {
-      console.log('resdata- details', resData);
-      console.timeEnd('load Details');
-      ServerActionCreators.receiveDetails(resData);
+      ServerActionCreators.receiveDetails(resData, zips, naics);
     });
   },
   zipList: function() {

@@ -68,19 +68,13 @@ module.exports = {
       zip: zip
     });
   },
-  receiveDetails: function(data, zip) {
+  receiveDetails: function(data, zip, naics) {
     //console.log("Details data", data);
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_DETAILS,
       details: data,
-      zip: zip
-    });
-  },
-  receiveDetails: function(data) {
-    //console.log("Details data", data);
-    AppDispatcher.handleServerAction({
-      type:ActionTypes.RECEIVE_DETAILS,
-      details: data
+      zip: zip,
+      naics: naics
     });
   }
 };

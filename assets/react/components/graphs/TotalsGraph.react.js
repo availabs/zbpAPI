@@ -93,7 +93,7 @@ var Graph = React.createClass({
         }
     },
     render: function() {
-        if(this.props.variable && this.props.totalData){
+        if(this.props.variable && this.props.totalData && this.props.zip){
           drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
         }
         return (

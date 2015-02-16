@@ -17,7 +17,8 @@ var _zipcodeList = [],
     _totals = {},
     _variable = "",
     _details = {},
-    _zip = "";
+    _zip = "",
+    _naics = "--";
 
 function _addUsers(rawData) {
   //console.log('stores/zbpStore/_addUsers',rawData);
@@ -69,6 +70,9 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getDetails: function() {
     return _details;
+  },
+  getNaics: function() {
+    return _naics;
   }
 });
 
@@ -81,18 +85,21 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       _zipcodeList = action.zipcodes.data;
       zbpStore.emitChange();
     break;
+    
     case ActionTypes.RECEIVE_TOTALS:
       _totals = action.totals.data;
       _variable = action.variable;
       _zip = action.zip;
       zbpStore.emitChange();
     break;
+    
     case ActionTypes.RECEIVE_DETAILS:
       _details = action.details.data;
       _zip = action.zip;
-
+      _naics = action.naics;
       zbpStore.emitChange();
     break;
+    
     default:
       // do nothing
   }

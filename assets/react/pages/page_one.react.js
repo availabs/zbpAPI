@@ -8,6 +8,19 @@ var React = require('react'),
     TotalsGraph  = require('../components/graphs/TotalsGraph.react'),
     DetailsGraph  = require('../components/graphs/DetailsGraph.react');
 
+var fixVarName = function(varName) {
+    switch(varName) {
+        case 'annual_payroll':
+            return 'Total Annual Payroll (thousands of dollars)'; break;
+        case 'q1_payroll':
+            return 'Total First Quarter Payroll (thousands of dollars)'; break;
+        case 'employees':
+            return 'Total mid-March employees'; break;
+        case 'establishments': 
+            return 'Total number of establishments'; break;
+    }
+}
+
 var SamplePage = React.createClass({
 
     getInitialState: function() {
@@ -16,7 +29,8 @@ var SamplePage = React.createClass({
             totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
-            zip:ZBPStore.getZip()
+            zip:ZBPStore.getZip(),
+            naics:ZBPStore.getNaics() //Is this needed for anything beyond displaying to the user?
         };
                
     },
@@ -33,7 +47,8 @@ var SamplePage = React.createClass({
             totals:ZBPStore.getTotals(), 
             variable:ZBPStore.getVariable(), 
             details: ZBPStore.getDetails(),
-            zip:ZBPStore.getZip()
+            zip:ZBPStore.getZip(),
+            naics:ZBPStore.getNaics()
         });
        
     },
@@ -47,7 +62,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Total Salary&nbsp;
+                                {this.state.variable}&nbsp;
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>
@@ -67,7 +82,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Employment Details&nbsp;
+                                Establishments for Naics Code {this.state.naics}&nbsp;
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>

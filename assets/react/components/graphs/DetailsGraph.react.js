@@ -5,6 +5,7 @@ var d3 = require('../../../../node_modules/d3/d3');
 
 var drawDetailGraph = function(details, zip) {
     if(details == {}) {
+        console.log("drawDetailGraph received empty data");
         return "";
     }
     else {
@@ -15,6 +16,7 @@ var drawDetailGraph = function(details, zip) {
                 .x(function(d) { return d.x; })
                 .y(function(d) { return d.y; })
                 .staggerLabels(false)
+                .tooltips(false)
                 .showXAxis(true)
                 .showYAxis(true)
                 .groupSpacing(0.1)
@@ -25,7 +27,7 @@ var drawDetailGraph = function(details, zip) {
                 .axisLabel('Year');
 
             chart.yAxis
-                .axisLabel('Employees');
+                .axisLabel('Number of Establishments');
 
             d3.select('#detailsGraph')
                 .datum(parseDetailData(details, zip))
@@ -72,8 +74,8 @@ var Graph = React.createClass({
         }
     },
     render: function() {
-        if(this.props.detailsData && this.props.zip) {
-            console.log("details props", this.props.detailsData)
+        if(Object.keys(this.props.detailsData).length > 0 && this.props.zip) {
+
             drawDetailGraph(this.props.detailsData, this.props.zip);
         }
         return (
