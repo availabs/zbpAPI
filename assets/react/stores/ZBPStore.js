@@ -14,7 +14,12 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     CHANGE_EVENT = 'change';
 
 var _zipcodeList = [],
-    _totals = {},
+    _totals = {
+      annual_payroll:{},
+      q1_payroll:{},
+      employees:{},
+      establishments:{}
+    },
     _variable = "",
     _details = {},
     _zip = "",
@@ -62,8 +67,13 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   getZip: function() {
     return _zip;
   },
-  getTotals: function() {
-    return _totals;
+  getTotals: function(varName) { 
+    
+    if(_totals[varName])
+      return _totals[varName];
+    else
+      return _totals["annual_payroll"]; //Default I guess.
+    
   },
   getVariable: function() {
     return _variable;
@@ -87,8 +97,9 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     break;
     
     case ActionTypes.RECEIVE_TOTALS:
-      _totals = action.totals.data;
-      _variable = action.variable;
+
+      _totals[action.variable] = action.totals.data; //sets it based on whichever variable it is.
+      _variable = action.variable; //still necessary?
       _zip = action.zip;
       zbpStore.emitChange();
     break;

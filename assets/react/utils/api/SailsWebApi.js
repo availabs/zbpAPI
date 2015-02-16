@@ -10,7 +10,6 @@ var io = require('./sails.io.js')();
 var ServerActionCreators = require('../../actions/ServerActionsCreator');
 
 var defaults = {
-  variable: "annual_payroll",
   zip: ["12110"],
   year: "",
   naics: "72"
@@ -20,7 +19,11 @@ module.exports = {
 
   initAdmin: function(user){
 
-    this.zpbTotals(defaults.variable, defaults.zip, defaults.year);
+    this.zpbTotals("annual_payroll", defaults.zip, defaults.year);
+    this.zpbTotals("q1_payroll", defaults.zip, defaults.year);
+    this.zpbTotals("employees", defaults.zip, defaults.year);
+    this.zpbTotals("establishments", defaults.zip, defaults.year);
+
     this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
 
     ServerActionCreators.setAppSection('admin');

@@ -44,7 +44,10 @@ var SamplePage = React.createClass({
     _onChange:function(){
         
         this.setState({
-            totals:ZBPStore.getTotals(), 
+            apTotals:ZBPStore.getTotals('annual_payroll'),
+            q1Totals:ZBPStore.getTotals('q1_payroll'),
+            empTotals:ZBPStore.getTotals('employees'), 
+            estTotals:ZBPStore.getTotals('establishments'),
             variable:ZBPStore.getVariable(), 
             details: ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
@@ -71,7 +74,7 @@ var SamplePage = React.createClass({
                             <div className="body no-margin">
                                 <TotalsGraph 
                                     totalData={this.state.totals} 
-                                    variable={this.state.variable} 
+                                    variable='emplo' 
                                     zip={this.state.zip}
                                     height="500" />
                             </div>
