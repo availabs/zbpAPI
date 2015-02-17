@@ -5,7 +5,7 @@ var React = require('react'),
 	//-- Components
 	Select2 = require('./Select2.react');
 
-var ZipSearch = React.createClass({
+var NaicsSearch = React.createClass({
 	 getInitialState: function() {
       return {
       	currentZip: this.props.currentZip
@@ -57,7 +57,7 @@ var ZipSearch = React.createClass({
 		                  onChange={this.handleChange} />
 
 		   			<div className="input-group-btn">
-                        <button type="button" className="btn btn-primary" onClick={this._newZip}><i className="fa fa-search"></i></button>
+                        <button type="button" className="btn btn-warning" onClick={this._newZip}><i className="fa fa-plus"></i></button>
                     </div>
                 </div>
             </div>
