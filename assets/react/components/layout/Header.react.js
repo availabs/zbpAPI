@@ -108,6 +108,7 @@ var Header = React.createClass({
                             </a>
                         </li>
                     </ul>
+                    
                 </div>
             </header>
         );

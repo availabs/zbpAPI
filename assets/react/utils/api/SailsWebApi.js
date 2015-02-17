@@ -10,10 +10,13 @@ var io = require('./sails.io.js')();
 var ServerActionCreators = require('../../actions/ServerActionsCreator');
 
 var defaults = {
-  zip: ["12110"],
+  zip: ["10001"],
   year: "",
   naics: "72"
 }
+
+var currZip = defaults.zip;
+var currNaics = defaults.naics;
 
 module.exports = {
 
@@ -82,6 +85,22 @@ module.exports = {
       //Delete 
       ServerActionCreators.deleteData(type,id);
     });
+  },
+
+  updateZip: function(zip) {
+    //add error checking of zip later?
+    currZip = zip;
+    this.zpbTotals("annual_payroll", currZip, defaults.year);
+    this.zpbTotals("q1_payroll", currZip, defaults.year);
+    this.zpbTotals("employees", currZip, defaults.year);
+    this.zpbTotals("establishments", currZip, defaults.year);
+
+    this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
+  },
+
+  updateNaics: function(naics) {
+    currNaics = naics;
+    this.zbpDetails(currZip, defaults.year, currNaics);
   },
 
   //---------------------------------------------------

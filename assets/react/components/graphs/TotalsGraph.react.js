@@ -6,7 +6,8 @@ var d3 = require('../../../../node_modules/d3/d3');
 
 
 var drawTotalGraph = function(variable, totals, zip) {
-    if(totals == {}) { //!totals doesn't work for some reason?
+    if(Object.keys(totals).length == 0) { 
+        console.log("Empty totals data", totals, "with variable ", variable)
         return "";
     }
     else {
@@ -28,9 +29,10 @@ var drawTotalGraph = function(variable, totals, zip) {
                 .axisLabel('Year');
 
             chart.yAxis
-                .axisLabel(fixVarName(variable));
+                .axisLabel(fixVarName(variable))
+                .axisLabelDistance(2);
 
-            d3.select('#totalsGraph')
+            d3.select('#' + variable)
                 .datum(parseTotalData(totals, zip))
                 .call(chart);
 
@@ -79,7 +81,7 @@ var parseTotalData = function(data, zip) {
 
     }
     else { //shouldn't happen w/ line chart demo.
-        console.log("Data != object! or something.")
+        console.log("Data != object! or something.");
     }
     return toRet;
 };
@@ -96,9 +98,12 @@ var Graph = React.createClass({
         if(this.props.variable && this.props.totalData && this.props.zip){
           drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
         }
+        else {
+            console.log("No data render side");
+        }
         return (
         	<div>
-                <svg height={this.props.height} id="totalsGraph" />
+                <svg height={this.props.height} className="totalsGraph" id={this.props.variable} />
         	</div>
         );
     }

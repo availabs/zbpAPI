@@ -68,7 +68,7 @@ var zbpStore = assign({}, EventEmitter.prototype, {
     return _zip;
   },
   getTotals: function(varName) { 
-    
+    //console.log("getTotals called with ", varName, "requested, and returning ", _totals[varName])
     if(_totals[varName])
       return _totals[varName];
     else
@@ -97,7 +97,7 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     break;
     
     case ActionTypes.RECEIVE_TOTALS:
-
+      //console.log("Action var", action.variable, "with data ", action.totals, "in ZBP store");
       _totals[action.variable] = action.totals.data; //sets it based on whichever variable it is.
       _variable = action.variable; //still necessary?
       _zip = action.zip;

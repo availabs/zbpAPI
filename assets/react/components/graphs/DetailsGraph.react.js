@@ -27,7 +27,8 @@ var drawDetailGraph = function(details, zip) {
                 .axisLabel('Year');
 
             chart.yAxis
-                .axisLabel('Number of Establishments');
+                .axisLabel('Number of Establishments')
+                .axisLabelDistance(4);
 
             d3.select('#detailsGraph')
                 .datum(parseDetailData(details, zip))
@@ -50,7 +51,7 @@ var parseDetailData = function(data, zip) {
         Each employment size in sizes is a stream/has an indiv key.
     */
         
-    //not a lot of error checking, for example: if there is only one year, or if there are multiple zip codes.
+    //Need more error checking? or not, since I dictate what I send to this,
 
     for(var size in sizes) { 
         var vals = [];

@@ -15,9 +15,9 @@ var fixVarName = function(varName) {
         case 'q1_payroll':
             return 'Total First Quarter Payroll (thousands of dollars)'; break;
         case 'employees':
-            return 'Total mid-March employees'; break;
+            return 'Total Mid-March Employees'; break;
         case 'establishments': 
-            return 'Total number of establishments'; break;
+            return 'Total Number of Establishments'; break;
     }
 }
 
@@ -26,7 +26,10 @@ var SamplePage = React.createClass({
     getInitialState: function() {
 
         return {
-            totals:ZBPStore.getTotals(),
+            apTotals:ZBPStore.getTotals('annual_payroll'),
+            q1Totals:ZBPStore.getTotals('q1_payroll'),
+            empTotals:ZBPStore.getTotals('employees'), 
+            estTotals:ZBPStore.getTotals('establishments'),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
@@ -65,7 +68,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                {this.state.variable}&nbsp;
+                                Annual Payroll&nbsp;
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>
@@ -73,14 +76,70 @@ var SamplePage = React.createClass({
                         </header>
                             <div className="body no-margin">
                                 <TotalsGraph 
-                                    totalData={this.state.totals} 
-                                    variable='emplo' 
+                                    totalData={this.state.apTotals} 
+                                    variable='annual_payroll' 
                                     zip={this.state.zip}
                                     height="500" />
                             </div>
                         </section>
                     </div>
-                    
+                    <div className="col-lg-12">
+                        <section className="widget">
+                            <header>
+                            <h4>
+                                First Quarter Payroll&nbsp;
+                                <small>
+                                    By Year for zipcode {this.state.zip}
+                                </small>
+                            </h4>
+                        </header>
+                            <div className="body no-margin">
+                                <TotalsGraph 
+                                    totalData={this.state.q1Totals} 
+                                    variable='q1_payroll' 
+                                    zip={this.state.zip}
+                                    height="500" />
+                            </div>
+                        </section>
+                    </div>
+                    <div className="col-lg-12">
+                        <section className="widget">
+                            <header>
+                            <h4>
+                                Mid-March Employees&nbsp;
+                                <small>
+                                    By Year for zipcode {this.state.zip}
+                                </small>
+                            </h4>
+                        </header>
+                            <div className="body no-margin">
+                                <TotalsGraph 
+                                    totalData={this.state.empTotals} 
+                                    variable='employees' 
+                                    zip={this.state.zip}
+                                    height="500" />
+                            </div>
+                        </section>
+                    </div>
+                    <div className="col-lg-12">
+                        <section className="widget">
+                            <header>
+                            <h4>
+                                Total Number of Establishments&nbsp;
+                                <small>
+                                    By Year for zipcode {this.state.zip}
+                                </small>
+                            </h4>
+                        </header>
+                            <div className="body no-margin">
+                                <TotalsGraph 
+                                    totalData={this.state.estTotals} 
+                                    variable='establishments' 
+                                    zip={this.state.zip}
+                                    height="500" />
+                            </div>
+                        </section>
+                    </div>
                     <div className="col-lg-12">
                         <section className="widget">
                             <header>
