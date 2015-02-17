@@ -61,7 +61,7 @@ var zbpStore = assign({}, EventEmitter.prototype, {
     return _users;
   },
 
-  getList: function() {
+  getZipList: function() {
     return _zipcodeList;
   },
   getZip: function() {
@@ -108,6 +108,12 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       _details = action.details.data;
       _zip = action.zip;
       _naics = action.naics;
+      zbpStore.emitChange();
+    break;
+
+    case ActionTypes.SET_CURRENT_ZIPCODE:
+      //console.log(action);
+      _zip = [action.zipcode];
       zbpStore.emitChange();
     break;
     

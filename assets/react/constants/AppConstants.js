@@ -11,6 +11,7 @@ module.exports = {
     //-------------------------------------------------------
     SELECT_USER: null,
     CREATE_USER:null,
+    SET_CURRENT_ZIPCODE:null,
 
     //-------------------------------------------------------
     //Server actions 

@@ -28,7 +28,7 @@ module.exports = {
     this.zpbTotals("establishments", defaults.zip, defaults.year);
 
     this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
-
+    this.zipList();
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
@@ -88,6 +88,7 @@ module.exports = {
   },
 
   updateZip: function(zip) {
+    //console.log("Updating zip with new zip", zip);
     //add error checking of zip later?
     currZip = zip;
     this.zpbTotals("annual_payroll", currZip, defaults.year);

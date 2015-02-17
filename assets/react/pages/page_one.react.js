@@ -6,7 +6,8 @@ var React = require('react'),
 
     //-- Components
     TotalsGraph  = require('../components/graphs/TotalsGraph.react'),
-    DetailsGraph  = require('../components/graphs/DetailsGraph.react');
+    DetailsGraph  = require('../components/graphs/DetailsGraph.react'),
+    ZipSearch = require('../components/utils/ZipSearch.react');
 
 var fixVarName = function(varName) {
     switch(varName) {
@@ -26,6 +27,7 @@ var SamplePage = React.createClass({
     getInitialState: function() {
 
         return {
+            zipList: ZBPStore.getZipList(),
             apTotals:ZBPStore.getTotals('annual_payroll'),
             q1Totals:ZBPStore.getTotals('q1_payroll'),
             empTotals:ZBPStore.getTotals('employees'), 
@@ -45,8 +47,8 @@ var SamplePage = React.createClass({
         ZBPStore.removeChangeListener(this._onChange);
     },
     _onChange:function(){
-        
         this.setState({
+            zipList: ZBPStore.getZipList(),
             apTotals:ZBPStore.getTotals('annual_payroll'),
             q1Totals:ZBPStore.getTotals('q1_payroll'),
             empTotals:ZBPStore.getTotals('employees'), 
@@ -63,6 +65,13 @@ var SamplePage = React.createClass({
         return (
         	<div className="content container">
             	<h2 className="page-title">Dashboard <small>Statistics and more</small></h2>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <section className="widget">
+                          <ZipSearch zips={this.state.zipList} currentZip={this.state.zip} />
+                        </section>
+                    </div>
+                </div>
                 <div className="row">
                 	<div className="col-lg-12">
                         <section className="widget">
