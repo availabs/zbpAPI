@@ -53,10 +53,16 @@ module.exports = {
   //------------------------------------
   // Zip Codes
   //------------------------------------
-  receiveList: function(data) {
+  receiveZipList: function(data) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_ZIPCODES,
       zipcodes: data
+    });
+  },
+  receiveNaicsList: function(data) {
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.RECEIVE_NAICS,
+      naics: data
     });
   },
   receiveTotals: function(varName, data, zip) {
@@ -77,4 +83,5 @@ module.exports = {
       naics: naics
     });
   }
+
 };

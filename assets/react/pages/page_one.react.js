@@ -1,13 +1,14 @@
 'use strict';
 var React = require('react'),
-    
     //--Stores
     ZBPStore = require('../stores/ZBPStore'),
 
     //-- Components
     TotalsGraph  = require('../components/graphs/TotalsGraph.react'),
     DetailsGraph  = require('../components/graphs/DetailsGraph.react'),
-    ZipSearch = require('../components/utils/ZipSearch.react');
+    ZipSearch = require('../components/utils/ZipSearch.react'),
+    NaicsSearch = require('../components/utils/NaicsSearch.react'),
+    VariableSelect = require('../components/utils/VariableSelect.react');
 
 var fixVarName = function(varName) {
     switch(varName) {
@@ -28,19 +29,20 @@ var SamplePage = React.createClass({
 
         return {
             zipList: ZBPStore.getZipList(),
-            apTotals:ZBPStore.getTotals('annual_payroll'),
-            q1Totals:ZBPStore.getTotals('q1_payroll'),
-            empTotals:ZBPStore.getTotals('employees'), 
-            estTotals:ZBPStore.getTotals('establishments'),
+            naicsList: ZBPStore.getNaicsList(),
+            totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
-            naics:ZBPStore.getNaics() //Is this needed for anything beyond displaying to the user?
+            naics:ZBPStore.getNaics(), //Is this needed for anything beyond displaying to the user?,
+            chosenVariable: ZBPStore.getChosenVariable()
         };
                
     },
     componentDidMount: function() {
         ZBPStore.addChangeListener(this._onChange);
+        document.getElementsByClassName('form-control').select2(); //NOT WORKING
+        // jquery('#naicsSearch').select2();
     },
 
     componentWillUnmount: function() {
@@ -49,26 +51,29 @@ var SamplePage = React.createClass({
     _onChange:function(){
         this.setState({
             zipList: ZBPStore.getZipList(),
-            apTotals:ZBPStore.getTotals('annual_payroll'),
-            q1Totals:ZBPStore.getTotals('q1_payroll'),
-            empTotals:ZBPStore.getTotals('employees'), 
-            estTotals:ZBPStore.getTotals('establishments'),
+            naicsList: ZBPStore.getNaicsList(),
+            totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(), 
             details: ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
-            naics:ZBPStore.getNaics()
+            naics:ZBPStore.getNaics(),
+            chosenVariable: ZBPStore.getChosenVariable()
         });
        
     },
     render: function() {
-    
         return (
         	<div className="content container">
             	<h2 className="page-title">Dashboard <small>Statistics and more</small></h2>
                 <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-lg-8">
                         <section className="widget">
                           <ZipSearch zips={this.state.zipList} currentZip={this.state.zip} />
+                        </section>
+                    </div>
+                    <div className="col-lg-4">
+                        <section className="widget">
+                          <VariableSelect currentVariable = {this.state.chosenVariable} />
                         </section>
                     </div>
                 </div>
@@ -77,7 +82,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Annual Payroll&nbsp;
+                                {fixVarName(this.state.chosenVariable)}&nbsp;
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>
@@ -85,70 +90,20 @@ var SamplePage = React.createClass({
                         </header>
                             <div className="body no-margin">
                                 <TotalsGraph 
-                                    totalData={this.state.apTotals} 
-                                    variable='annual_payroll' 
+                                    totalData={this.state.totals[this.state.chosenVariable]} 
+                                    variable={this.state.chosenVariable} 
                                     zip={this.state.zip}
                                     height="500" />
                             </div>
                         </section>
                     </div>
+                    
                     <div className="col-lg-12">
                         <section className="widget">
-                            <header>
-                            <h4>
-                                First Quarter Payroll&nbsp;
-                                <small>
-                                    By Year for zipcode {this.state.zip}
-                                </small>
-                            </h4>
-                        </header>
-                            <div className="body no-margin">
-                                <TotalsGraph 
-                                    totalData={this.state.q1Totals} 
-                                    variable='q1_payroll' 
-                                    zip={this.state.zip}
-                                    height="500" />
-                            </div>
+                            <NaicsSearch naicsList={this.state.naicsList} currentNaics={this.state.naics} />
                         </section>
                     </div>
-                    <div className="col-lg-12">
-                        <section className="widget">
-                            <header>
-                            <h4>
-                                Mid-March Employees&nbsp;
-                                <small>
-                                    By Year for zipcode {this.state.zip}
-                                </small>
-                            </h4>
-                        </header>
-                            <div className="body no-margin">
-                                <TotalsGraph 
-                                    totalData={this.state.empTotals} 
-                                    variable='employees' 
-                                    zip={this.state.zip}
-                                    height="500" />
-                            </div>
-                        </section>
-                    </div>
-                    <div className="col-lg-12">
-                        <section className="widget">
-                            <header>
-                            <h4>
-                                Total Number of Establishments&nbsp;
-                                <small>
-                                    By Year for zipcode {this.state.zip}
-                                </small>
-                            </h4>
-                        </header>
-                            <div className="body no-margin">
-                                <TotalsGraph 
-                                    totalData={this.state.estTotals} 
-                                    variable='establishments' 
-                                    zip={this.state.zip}
-                                    height="500" />
-                            </div>
-                        </section>
-                    </div>
+                
                     <div className="col-lg-12">
                         <section className="widget">
                             <header>

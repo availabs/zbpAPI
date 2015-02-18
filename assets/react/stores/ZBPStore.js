@@ -20,10 +20,12 @@ var _zipcodeList = [],
       employees:{},
       establishments:{}
     },
-    _variable = "",
+    _variable = "annual_payroll",
     _details = {},
     _zip = "",
-    _naics = "--";
+    _naics = "72",
+    _naicsList = [],
+    _chosenVariable = "annual_payroll";
 
 function _addUsers(rawData) {
   //console.log('stores/zbpStore/_addUsers',rawData);
@@ -64,16 +66,14 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   getZipList: function() {
     return _zipcodeList;
   },
+  getNaicsList: function() {
+    return _naicsList;
+  },
   getZip: function() {
     return _zip;
   },
   getTotals: function(varName) { 
-    //console.log("getTotals called with ", varName, "requested, and returning ", _totals[varName])
-    if(_totals[varName])
-      return _totals[varName];
-    else
-      return _totals["annual_payroll"]; //Default I guess.
-    
+    return _totals;
   },
   getVariable: function() {
     return _variable;
@@ -83,6 +83,9 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getNaics: function() {
     return _naics;
+  },
+  getChosenVariable: function() {
+    return _chosenVariable;
   }
 });
 
@@ -111,12 +114,27 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       zbpStore.emitChange();
     break;
 
+    case ActionTypes.RECEIVE_NAICS:
+      _naicsList = action.naics.data;
+      zbpStore.emitChange();
+    break;
+
+    case ActionTypes.SET_CURRENT_VAR:
+      _chosenVariable = action.variable;
+      zbpStore.emitChange();
+    break;
+
     case ActionTypes.SET_CURRENT_ZIPCODE:
       //console.log(action);
-      _zip = [action.zipcode];
+      _zip = [action.zipcode]; //bc zipcode is wanted as an array at some point
       zbpStore.emitChange();
     break;
     
+    case ActionTypes.SET_CURRENT_NAICS:
+      _naics = action.naics;
+      zbpStore.emitChange();
+    break;
+
     default:
       // do nothing
   }

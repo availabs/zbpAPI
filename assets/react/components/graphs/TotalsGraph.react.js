@@ -31,7 +31,7 @@ var drawTotalGraph = function(variable, totals, zip) {
 
             chart.yAxis
                 .axisLabel(fixVarName(variable))
-                .axisLabelDistance(2);
+                .axisLabelDistance(-5);
 
             d3.select('#' + variable)
                 .datum(parseTotalData(totals, zip))
@@ -76,8 +76,10 @@ var parseTotalData = function(data, zip) {
         //console.log("Total's zip", zip, "for data", data);
 
         for(var yr in data) {
-            if(!data[yr][zip])
+            if(data[yr][zip] != 0 && !data[yr][zip]){ //b/c that data can be 0 sometimes.
+                //console.log("Empty graph for", zip, data);
                 return ""; //does this if the data isn't loaded yet, so the data is still for the old zip code.
+            }
             vals.push({"x": yr, "y": data[yr][zip]});
 
         }
@@ -108,10 +110,11 @@ var Graph = React.createClass({
             this.props.zip = this.props.zip[0];
         }
         if(this.props.variable && Object.keys(this.props.totalData).length > 0 && this.props.zip && Object.keys(this.props.totalData["2000"])[0] == this.props.zip){
-          drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
+            drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
+            //console.log("curr data for ", this.props.variable, " ", this.props.totalData)
         }
-        else {
-            //console.log("No data render side");
+        else if(Object.keys(this.props.totalData).length > 0) {
+            //console.log("No current data render side for zip", this.props.zip, "for var", this.props.variable);
         }
         return (
         	<div>

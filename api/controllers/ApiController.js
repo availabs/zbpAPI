@@ -150,7 +150,9 @@ module.exports = {
 			else {
 				sql = 'select naics from zbp.zbp_details where naics like \"' + ncode + '%\" group by naics order by naics';
 			}
-			var request = bigQuery.jobs.query({
+			
+		}
+		var request = bigQuery.jobs.query({
 				kind: 'bigquery#queryRequest',
 				projectId: 'avail-wim',
 				timeoutMs: '30000',
@@ -161,8 +163,7 @@ module.exports = {
 				if (err) console.log('Error:',err);
 
 				res.json({data:simplifyList(response)})
-			});
-		}
+		});
 		
 	},
 	totals : function(req,res){

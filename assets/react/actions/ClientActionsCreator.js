@@ -20,5 +20,18 @@ module.exports = {
     });
     SailsWebApi.updateZip(data);
   },
+  setCurrentNaics: function(data) {
+  	AppDispatcher.handleViewAction({
+  		type:ActionTypes.SET_CURRENT_NAICS,
+  		naics: data
+  	});
+  	SailsWebApi.updateNaics(data);
+  },
+  setCurrentVariable: function(data) {
+    AppDispatcher.handleViewAction({
+      type:ActionTypes.SET_CURRENT_VAR,
+      variable: data
+    })
+  }
 
 };

@@ -12,7 +12,8 @@ module.exports = {
     SELECT_USER: null,
     CREATE_USER:null,
     SET_CURRENT_ZIPCODE:null,
-
+    SET_CURRENT_NAICS: null,
+    SET_CURRENT_VAR: null,
     //-------------------------------------------------------
     //Server actions 
     //-------------------------------------------------------
@@ -20,6 +21,7 @@ module.exports = {
     RECEIVE_ZIPCODES:null,
     RECEIVE_TOTALS:null,
     RECEIVE_DETAILS:null,
+    RECEIVE_NAICS:null,
     //-------User--------------------------------------------
     RECEIVE_USERS: null,
     SET_SESSION_USER:null,

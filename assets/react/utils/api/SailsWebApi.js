@@ -29,6 +29,8 @@ module.exports = {
 
     this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
     this.zipList();
+    this.naicsList();
+
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
@@ -127,8 +129,13 @@ module.exports = {
   },
   zipList: function() {
     io.socket.get('/zipcodes',function(resData){
-      ServerActionCreators.receiveList(resData);
-    })
+      ServerActionCreators.receiveZipList(resData);
+    });
+  },
+  naicsList: function() {    
+    io.socket.get('/naics', function(resData) {
+      ServerActionCreators.receiveNaicsList(resData);
+    });       
   }
 
 };

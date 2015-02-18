@@ -19,12 +19,13 @@ var ZipSearch = React.createClass({
 	_newZip:function(e){
 
 		//console.log();
-		if(this.props.zips.indexOf(this.state.currentZip) >= 0){
-			console.log('Legit Zip Code, sending to dispatch');
-			console.log(this.state.currentZip);
+		if(this.props.zips.indexOf(this.state.currentZip) >= 0) {
+			//console.log('Legit Zip Code, sending to dispatch');
+			//console.log(this.state.currentZip);
 			ClientActionsCreator.setCurrentZipcode([this.state.currentZip]); //send as array bc that's how everything, including the API, wants it.
-		}else{
-			console.log('Sorry Not a Zip Code')
+		}
+		else {
+			//console.log('Sorry Not a Zip Code')
 			swal({
 				title: "Invalid Zip Code!",
 				text: "Please try again.",
@@ -44,17 +45,18 @@ var ZipSearch = React.createClass({
   		// 	}
   		// });
   		var style = {marginBottom:0};
-  		var currentZip = this.props.currentZip
+
     	return (
 	    	<div className="form-group" style={style}>
                 <div className="input-group input-group">
 		        	<input
-		                  id="routeSelector"
+		                  id="zipSearch"
 		                  className="form-control"
 		                  type="text"
 		                  ref="zipInput"
 		                  value={this.state.currentZip} 
-		                  onChange={this.handleChange} />
+		                  onChange={this.handleChange} 
+		                  placeholder="Search by zip..."/>
 
 		   			<div className="input-group-btn">
                         <button type="button" className="btn btn-primary" onClick={this._newZip}><i className="fa fa-search"></i></button>

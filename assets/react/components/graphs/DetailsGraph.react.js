@@ -58,10 +58,14 @@ var parseDetailData = function(data, zip) {
     for(var size in sizes) { 
         var vals = [];
         for(var yr in data) {
-            if(!data[yr][zip])
+            if(data[yr][zip] != 0 && !data[yr][zip])
                 return ""; //does this if the data isn't loaded yet, so the data is still for the old zip code.
-            vals.push({"x": yr, "y": data[yr][zip][sizesKeys[size]]});
+            vals.push({"x": parseInt(yr), "y": parseInt(data[yr][zip][sizesKeys[size]])});
         }
+        /*if(vals.length == 1){
+            console.log("one yr of data")
+            vals.push({});
+        }*/
         toRet.push({
             values: vals,
             key: sizes[size]
@@ -83,9 +87,16 @@ var Graph = React.createClass({
             //console.log("zip is array!")
             this.props.zip = this.props.zip[0];
         }
-        if(Object.keys(this.props.detailsData).length > 0 && this.props.zip && Object.keys(this.props.detailsData["2000"])[0] == this.props.zip) {
-            //This makes sure that the data has caught up to the new zip code.
-            drawDetailGraph(this.props.detailsData, this.props.zip);
+        try {
+            if(this.props.zip && Object.keys(this.props.detailsData).length > 0 && Object.keys(this.props.detailsData[Object.keys(this.props.detailsData)[0]])[0] == this.props.zip) {
+                //This makes sure that the data has caught up to the new zip code.
+                //Issue: what if data for "1994" doesn't exist in this instance of detailsdata?
+                drawDetailGraph(this.props.detailsData, this.props.zip);
+            }
+        }
+        catch(err) {
+            console.log(this.props.detailsData);
+            //console.log(err);
         }
         return (
         	<div>
