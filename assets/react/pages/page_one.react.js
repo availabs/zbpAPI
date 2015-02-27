@@ -41,8 +41,6 @@ var SamplePage = React.createClass({
     },
     componentDidMount: function() {
         ZBPStore.addChangeListener(this._onChange);
-        document.getElementsByClassName('form-control').select2(); //NOT WORKING
-        // jquery('#naicsSearch').select2();
     },
 
     componentWillUnmount: function() {
@@ -119,6 +117,24 @@ var SamplePage = React.createClass({
                                     detailsData={this.state.details}
                                     zip={this.state.zip}
                                     height="500" />
+                            </div>
+                        </section>
+                    </div>
+
+
+                     <div className="col-lg-12">
+                        <section className="widget">
+                            <header>
+                            <h4>
+                                Establishments for Naics Code {this.state.naics}&nbsp;
+                                <small>
+                                    Map of zipcode {this.state.zip}
+                                </small>
+                            </h4>
+                        </header>
+                            <div className="body no-margin">
+                                <ZipCodeMap 
+                                zipcodes={this.state.zipGeo}/>
                             </div>
                         </section>
                     </div>

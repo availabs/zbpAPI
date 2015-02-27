@@ -25,7 +25,8 @@ var _zipcodeList = [],
     _zip = "",
     _naics = "72",
     _naicsList = [],
-    _chosenVariable = "annual_payroll";
+    _chosenVariable = "annual_payroll",
+    _geoJSON = {};
 
 function _addUsers(rawData) {
   //console.log('stores/zbpStore/_addUsers',rawData);
@@ -86,6 +87,9 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getChosenVariable: function() {
     return _chosenVariable;
+  },
+  getGeoJSON: function() {
+    return _geoJSON;
   }
 });
 
@@ -118,6 +122,10 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       _naicsList = action.naics.data;
       zbpStore.emitChange();
     break;
+
+    case ActionTypes.RECEIVE_GEOJSON:
+      _geoJSON = action.geoJSON
+    break;  
 
     case ActionTypes.SET_CURRENT_VAR:
       _chosenVariable = action.variable;

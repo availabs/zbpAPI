@@ -22,6 +22,7 @@ module.exports = {
     RECEIVE_TOTALS:null,
     RECEIVE_DETAILS:null,
     RECEIVE_NAICS:null,
+    RECEIVE_GEOJSON:null,
     //-------User--------------------------------------------
     RECEIVE_USERS: null,
     SET_SESSION_USER:null,

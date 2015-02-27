@@ -82,6 +82,12 @@ module.exports = {
       zip: zip,
       naics: naics
     });
+  },
+  receiveGeoJSON: function(geoJ) {
+    AppDispatcher.handleServerAction({
+      type:ActionTypes.RECEIVE_GEOJSON,
+      geoJSON: geoJ
+    });
   }
 
 };

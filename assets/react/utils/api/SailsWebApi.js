@@ -28,6 +28,7 @@ module.exports = {
     this.zpbTotals("establishments", defaults.zip, defaults.year);
 
     this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
+    this.zbpGeo(defaults.zip);
     this.zipList();
     this.naicsList();
 
@@ -132,6 +133,11 @@ module.exports = {
       ServerActionCreators.receiveZipList(resData);
     });
   },
+  zbpGeo: function() {
+    io.socket.post('/geozipcodes', zipPost, function(resData) {
+      ServerActionCreators.receiveGeoJSON(resData);
+    });
+  };
   naicsList: function() {    
     io.socket.get('/naics', function(resData) {
       ServerActionCreators.receiveNaicsList(resData);
