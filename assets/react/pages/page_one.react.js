@@ -8,7 +8,9 @@ var React = require('react'),
     DetailsGraph  = require('../components/graphs/DetailsGraph.react'),
     ZipSearch = require('../components/utils/ZipSearch.react'),
     NaicsSearch = require('../components/utils/NaicsSearch.react'),
-    VariableSelect = require('../components/utils/VariableSelect.react');
+    VariableSelect = require('../components/utils/VariableSelect.react'),
+
+    ZipCodeMap = require('../components/maps/ZipCodeMap.react');
 
 var fixVarName = function(varName) {
     switch(varName) {

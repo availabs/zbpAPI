@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react'),
-	ZBPStore = require('../stores/ZBPStore'), //Get the data from here.
 	//-- Actions
 	ClientActionsCreator = require('../../actions/ClientActionsCreator'),
 
@@ -26,5 +25,14 @@ var ZipCodeMap = React.createClass({
 				geo: ZBPStore.getGeoJSON,//our geoJSON, from server
 			}
 		}
+	},
+	render: function() {
+		return (
+			<div>
+				<span>Hello</span>
+			</div>
+		);
 	}
 });
+
+module.exports = ZipCodeMap;

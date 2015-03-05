@@ -133,11 +133,12 @@ module.exports = {
       ServerActionCreators.receiveZipList(resData);
     });
   },
-  zbpGeo: function() {
+  zbpGeo: function(zips) {
+    var zipPost = {'zips':zips};
     io.socket.post('/geozipcodes', zipPost, function(resData) {
       ServerActionCreators.receiveGeoJSON(resData);
     });
-  };
+  },
   naicsList: function() {    
     io.socket.get('/naics', function(resData) {
       ServerActionCreators.receiveNaicsList(resData);
