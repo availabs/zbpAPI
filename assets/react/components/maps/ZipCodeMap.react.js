@@ -18,18 +18,36 @@ var ZipCodeMap = React.createClass({
 	},
 	processLayers:function() {
 		zipID++;
-
-		return {
-			zipLayer: {
-				id: zipID,
-				geo: ZBPStore.getGeoJSON,//our geoJSON, from server
+		if(Object.keys(this.props.geo).length == 0) {
+			//console.log("not done loading.")
+			return {
+				zipLayer: {
+					id: zipID,
+					geo: { "type": "FeatureCollection",
+	    					"features": []
+	     				},
+	 				options: {
+	 					zoomOnLoad:true
+	 				}
+ 				}
+			}
+		}
+		else {
+			return {
+					zipLayer: {
+						id: zipID,
+						geo: this.props.geo, //our geoJSON, from server,
+						options: {
+							zoomOnLoad:true
+						}
+				}
 			}
 		}
 	},
 	render: function() {
 		return (
 			<div>
-				<span>Hello</span>
+				<LeafletMap layers={this.processLayers()} height="400px" />
 			</div>
 		);
 	}

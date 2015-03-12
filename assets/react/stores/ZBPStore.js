@@ -124,7 +124,8 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     break;
 
     case ActionTypes.RECEIVE_GEOJSON:
-      _geoJSON = action.geoJSON
+      _geoJSON = action.geoJSON;
+      zbpStore.emitChange();
     break;  
 
     case ActionTypes.SET_CURRENT_VAR:

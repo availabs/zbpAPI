@@ -28,7 +28,6 @@ var fixVarName = function(varName) {
 var SamplePage = React.createClass({
 
     getInitialState: function() {
-
         return {
             zipList: ZBPStore.getZipList(),
             naicsList: ZBPStore.getNaicsList(),
@@ -37,7 +36,8 @@ var SamplePage = React.createClass({
             details:ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), //Is this needed for anything beyond displaying to the user?,
-            chosenVariable: ZBPStore.getChosenVariable()
+            chosenVariable: ZBPStore.getChosenVariable(),
+            zipGeo: ZBPStore.getGeoJSON()
         };
                
     },
@@ -49,6 +49,7 @@ var SamplePage = React.createClass({
         ZBPStore.removeChangeListener(this._onChange);
     },
     _onChange:function(){
+
         this.setState({
             zipList: ZBPStore.getZipList(),
             naicsList: ZBPStore.getNaicsList(),
@@ -57,7 +58,8 @@ var SamplePage = React.createClass({
             details: ZBPStore.getDetails(),
             zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(),
-            chosenVariable: ZBPStore.getChosenVariable()
+            chosenVariable: ZBPStore.getChosenVariable(),
+            zipGeo: ZBPStore.getGeoJSON()
         });
        
     },
@@ -136,7 +138,7 @@ var SamplePage = React.createClass({
                         </header>
                             <div className="body no-margin">
                                 <ZipCodeMap 
-                                zipcodes={this.state.zipGeo}/>
+                                geo={this.state.zipGeo}/>
                             </div>
                         </section>
                     </div>

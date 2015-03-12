@@ -83,10 +83,10 @@ module.exports = {
       naics: naics
     });
   },
-  receiveGeoJSON: function(geoJ) {
+  receiveGeoJSON: function(geoJSON) {
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_GEOJSON,
-      geoJSON: geoJ
+      geoJSON: geoJSON
     });
   }
 
