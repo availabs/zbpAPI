@@ -16,7 +16,8 @@
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
   'styles/white/application.css',
-  'styles/custom.css'
+  'styles/custom.css',
+  'bower_components/leaflet/dist/leaflet.css'
 ];
 
 

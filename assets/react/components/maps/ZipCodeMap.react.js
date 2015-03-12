@@ -17,17 +17,26 @@ var ZipCodeMap = React.createClass({
 		}
 	},
 	processLayers:function() {
-		zipID++;
+		var t = ++zipID; // do not know why zipID++; doesn't just work, but this does.
 		if(Object.keys(this.props.geo).length == 0) {
 			//console.log("not done loading.")
 			return {
 				zipLayer: {
-					id: zipID,
+					id: t,
 					geo: { "type": "FeatureCollection",
 	    					"features": []
 	     				},
 	 				options: {
-	 					zoomOnLoad:true
+	 					zoomOnLoad:true,
+	 					style: function(feature) {
+								return {
+									fillColor: "#0099FF",
+									color: "#0000CC",
+									weight: 0.5,
+									opacity: 0.3,
+									fillOpacity: 0.4	
+								};
+							}
 	 				}
  				}
 			}
@@ -35,16 +44,27 @@ var ZipCodeMap = React.createClass({
 		else {
 			return {
 					zipLayer: {
-						id: zipID,
+						id: t,
 						geo: this.props.geo, //our geoJSON, from server,
 						options: {
-							zoomOnLoad:true
+							zoomOnLoad:true,
+							style: function(feature) {
+								return {
+									fillColor: "#0099FF",
+									color: "#0000CC",
+									weight: 0.5,
+									opacity: 0.3,
+									fillOpacity: 0.4,
+									className:'zipcode'
+								};
+							}
 						}
 				}
 			}
 		}
 	},
 	render: function() {
+		//console.log("geoR", this.props.geo);
 		return (
 			<div>
 				<LeafletMap layers={this.processLayers()} height="400px" />

@@ -114,7 +114,7 @@ module.exports = {
     
     var yearPath = year || '';
     var zipPost = {'zips':zips}
-
+    this.zbpGeo(zips);
     io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
       ServerActionCreators.receiveTotals(type,resData, zips[0]);
     });

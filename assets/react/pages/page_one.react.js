@@ -49,7 +49,6 @@ var SamplePage = React.createClass({
         ZBPStore.removeChangeListener(this._onChange);
     },
     _onChange:function(){
-
         this.setState({
             zipList: ZBPStore.getZipList(),
             naicsList: ZBPStore.getNaicsList(),

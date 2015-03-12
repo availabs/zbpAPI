@@ -10,7 +10,7 @@ var drawDetailGraph = function(details, zip) {
     }
     else {
         nv.addGraph(function() {
-            var chart = nv.models.multiBarChart()
+            /*var chart = nv.models.multiBarChart()
                 .margin({left:100})
                 .transitionDuration(350)
                 .x(function(d) { return d.x; })
@@ -21,8 +21,15 @@ var drawDetailGraph = function(details, zip) {
                 .showYAxis(true)
                 .groupSpacing(0.1)
                 .showControls(true)
-                ;
-
+                ;*/
+            var chart = nv.models.lineChart()
+                .margin({left:100})
+                .useInteractiveGuideLine(true)
+                .transitionDuration(350)
+                .showLegend(true)
+                .showYAxis(true)
+                .showXAxis(true)
+            ;
             chart.xAxis
                 .axisLabel('Year');
 
@@ -41,15 +48,21 @@ var drawDetailGraph = function(details, zip) {
     }
 };
 
+var avg2 = function(num1,num2) {
+    return (num1+ num2) / 2;
+};
+
 var parseDetailData = function(data, zip) {
     //console.log("data that parseDetail is getting", data);
     var toRet = [],
         sizes = ["Establishments with 1 to 4 employees","Establishments with 5 to 9 employees","Establishments with 10 to 19 employees","Establishments with 20 to 49 employees","Establishments with 50 to 99 employees","Establishments with 100 to 249 employees","Establishments with 250 to 499 employees","Establishments with 500 to 999 employees","Establishments with 1,000 employees or more"],
-        sizesKeys = ["1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"];
+        sizesKeys = ["1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"],
+        sizeVals = [avg2(1,4) , avg2(5, 9), avg2(10, 19), avg2(20, 49), avg2(50, 99), avg2(100, 249), avg2(250, 499), avg2(500, 999), 13700];
 
     /*
         First go through each
         Each employment size in sizes is a stream/has an indiv key.
+        MAKE A LINE GRAPH.
     */
     
 

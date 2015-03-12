@@ -32,6 +32,6 @@ module.exports = {
       type:ActionTypes.SET_CURRENT_VAR,
       variable: data
     })
-  }
+}
 
 };
