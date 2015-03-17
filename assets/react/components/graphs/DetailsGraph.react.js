@@ -23,19 +23,20 @@ var drawDetailGraph = function(details, zip) {
                 .showControls(true)
                 ;*/
             var chart = nv.models.lineChart()
-                .margin({left:100})
-                .useInteractiveGuideLine(true)
+                .margin({left:60})
+                .useInteractiveGuideline(true)
                 .transitionDuration(350)
-                .showLegend(true)
+                .showLegend(false)
                 .showYAxis(true)
                 .showXAxis(true)
             ;
+
             chart.xAxis
-                .axisLabel('Year');
+                .axisLabel('Year')
+                .tickValues(Object.keys(details));
 
             chart.yAxis
-                .axisLabel('Number of Establishments')
-                .axisLabelDistance(4);
+                .axisLabel('Estimated Number of Employees');
 
             d3.select('#detailsGraph')
                 .datum(parseDetailData(details, zip))
@@ -54,7 +55,7 @@ var avg2 = function(num1,num2) {
 
 var parseDetailData = function(data, zip) {
     //console.log("data that parseDetail is getting", data);
-    var toRet = [],
+    var vals = [],
         sizes = ["Establishments with 1 to 4 employees","Establishments with 5 to 9 employees","Establishments with 10 to 19 employees","Establishments with 20 to 49 employees","Establishments with 50 to 99 employees","Establishments with 100 to 249 employees","Establishments with 250 to 499 employees","Establishments with 500 to 999 employees","Establishments with 1,000 employees or more"],
         sizesKeys = ["1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"],
         sizeVals = [avg2(1,4) , avg2(5, 9), avg2(10, 19), avg2(20, 49), avg2(50, 99), avg2(100, 249), avg2(250, 499), avg2(500, 999), 13700];
@@ -68,7 +69,19 @@ var parseDetailData = function(data, zip) {
 
     //Need more error checking? or not, since I dictate what I send to this,
     //console.log("Detail's zip", zip, "for data", data);
-    for(var size in sizes) { 
+    //console.log(data)
+    for(var yr in data) {
+        if(data[yr][zip] != 0 && !data[yr][zip])
+            return "";
+        var sum = 0;
+        for(var k in data[yr][zip]) {
+            if(k == "total")
+                continue;
+            sum += parseInt(data[yr][zip][k]) * sizeVals[sizesKeys.indexOf(k)];
+        }
+        vals.push({x: parseInt(yr), y: Math.round(sum)});
+    }
+    /*for(var size in sizes) { 
         var vals = [];
         for(var yr in data) {
             if(data[yr][zip] != 0 && !data[yr][zip])
@@ -78,14 +91,14 @@ var parseDetailData = function(data, zip) {
         /*if(vals.length == 1){
             console.log("one yr of data")
             vals.push({});
-        }*/
+        }
         toRet.push({
             values: vals,
             key: sizes[size]
         });
     }
-    //console.log("Returning toRet from detials", toRet)
-    return toRet;
+*/ 
+    return [{"values": vals}];
 };  
 
 var Graph = React.createClass({

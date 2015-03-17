@@ -253,20 +253,28 @@ module.exports = {
 	details : function(req,res){
 		var sql = '';
 		var codes;
-		if(!req.param('naics')) {
-			res.json({status:500,responseText:'Error, must pass naics code'});
+		if(!req.param('naics') || !Array.isArray(req.param('naics'))) {
+			res.json({status:500,responseText:'Error, must pass array of naics codes'});
 		}
 		else {
 			var naics = req.param('naics');
+			var naicsString = function() {
+				var toRet = 'and (naics like "' + naics[0] + '%" ';
+				for(var i=1; i<naics.length; i++) {
+					toRet += 'or naics like "' + naics[i] + '%" ';
+				}
+				toRet += ") ";
+				return toRet;
+			}
 			if(req.param('year')) {
 				var year = req.param('year');
 				
 				if(req.param('zips')) {
 					codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']','');
-					sql = 'select zip, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') and naics like "' + naics + '%" group by zip, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+					sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString() + ' group by zip, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 				}
 				else if(req.param('fips')) {
-
+					//implement later.
 				}
 				else {
 					res.json({status:500,responseText:'Error, must pass zips or fips codes'});
@@ -275,7 +283,7 @@ module.exports = {
 			else { //if the user wants the summed data
 				if(req.param('zips')) {
 					codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']', '');
-					sql = 'select year, zip, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') and naics like "' + naics + '%" group by year, zip order by year, zip';
+					sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString() + ' group by year, zip, naics order by year, zip';
 				}
 				else if(req.param('fips')) {
 
@@ -285,6 +293,7 @@ module.exports = {
 				}
 			}
 		}
+		console.log(sql);
 		var request = bigQuery.jobs.query({
 				kind: 'bigquery#queryRequest',
 				projectId: 'avail-wim',
@@ -296,8 +305,8 @@ module.exports = {
 				if (err) console.log('Error:',err);
 				//console.log(sql);
 				
-				res.json({data:simplifyForDetails(response)})
-				//res.json({data:response})
+				//res.json({data:simplifyForDetails(response)})
+				res.json({data:response})
 			});
 	},
 

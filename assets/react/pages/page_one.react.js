@@ -109,7 +109,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Establishments for Naics Code {this.state.naics}&nbsp;
+                                Employees for Naics Code {this.state.naics}&nbsp; 
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>
@@ -129,10 +129,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Establishments for Naics Code {this.state.naics}&nbsp;
-                                <small>
-                                    Map of zipcode {this.state.zip}
-                                </small>
+                                Map of Zip Code {this.state.zip}&nbsp;
                             </h4>
                         </header>
                             <div className="body no-margin">

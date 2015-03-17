@@ -24,8 +24,7 @@ module.exports.routes = {
   '/totals/:variable_name' : 'APIController.totals',
   '/totals/:variable_name/:year' : 'APIController.totals',
   '/details' : 'APIController.details',
-  '/details/:naics' : 'APIController.details',
-  '/details/:naics/:year' : 'APIController.details',
+  '/details/:year' : 'APIController.details',
 
   '/zip_analysis': 'LandingController.flux', //Main Flux App
 
