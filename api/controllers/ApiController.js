@@ -25,11 +25,48 @@ var jwt = new googleapis.auth.JWT(
 jwt.authorize();
 var bigQuery = googleapis.bigquery('v2');
 var simplifyForDetails = function(response) {
-	var sizes = ["total", "1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"]
+	var sizes = ["total", "1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"];
 	var toReturn = {},
 		fields = response.schema.fields;
+	//console.log(response)
+	for(var row in response.rows) {
+		var rowVals = response.rows[row].f;
 
-	for(var row in response.rows){
+		if(!toReturn[rowVals[0].v]) { //If this year doesn't exist in toRet yet.
+			toReturn[rowVals[0].v] = {};
+		}
+
+		if(fields[0].name == 'year') { //if multiple years.
+			for(var i=3; i<rowVals.length; i++) { //starting from f_0 at 3
+				if(!toReturn[rowVals[0].v][rowVals[1].v]) { //if this zip doesn't exist in obj of yr yet
+					toReturn[rowVals[0].v][rowVals[1].v] = {};
+				}
+				if(!toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v]) { //if this naics doesn't exist yet within the yr, then zip
+					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v] = {};
+				}
+				if(fields[i].name.charAt(0) == 'f') { //if it's a single val.
+					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v][sizes[i-3]] = rowVals[i].v;
+				}
+				else { //if it's the total.
+					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v][fields[i].name] = rowVals[i].v;
+				}
+			}
+		}
+		else {
+			for(var i=2; i<rowVals.length; i++) { //starting from f_0 at 2
+				if(!toReturn[rowVals[0].v][rowVals[1].v]) {
+					toReturn[rowVals[0].v][rowVals[1].v] = {};
+				}
+				if(fields[i].name.charAt(0) == 'b') {
+					toReturn[rowVals[0].v][rowVals[1].v][sizes[i-2]] = rowVals[i].v;
+				}
+				else {
+					toReturn[rowVals[0].v][rowvals[1].v][fields[i].name] = rowVals[i].v;
+				}
+			}
+		}
+	}
+	/*for(var row in response.rows){
 		var rowVals = response.rows[row].f;
 
 		if(!toReturn[rowVals[0].v]) {
@@ -57,10 +94,10 @@ var simplifyForDetails = function(response) {
 					toReturn[rowVals[0].v][fields[i].name] = rowVals[i].v;
 				}
 			}
-		}
+		}*/
 		
 
-	}
+	//}
 	return toReturn;
 
 	/*return response.rows.map(function(row){
@@ -70,7 +107,7 @@ var simplifyForDetails = function(response) {
 			return data;
 		});
 	});*/
-}
+};
 
 var simplifyForTotals = function(response) {
 	var toReturn = {},
@@ -271,7 +308,7 @@ module.exports = {
 				
 				if(req.param('zips')) {
 					codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']','');
-					sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString() + ' group by zip, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+					sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString() + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 				}
 				else if(req.param('fips')) {
 					//implement later.
@@ -305,8 +342,8 @@ module.exports = {
 				if (err) console.log('Error:',err);
 				//console.log(sql);
 				
-				//res.json({data:simplifyForDetails(response)})
-				res.json({data:response})
+				res.json({data:simplifyForDetails(response)})
+				//res.json({data:response})
 			});
 	},
 
