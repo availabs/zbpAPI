@@ -39,7 +39,7 @@ var NaicsSearch = React.createClass({
     		<Select2Component
     			id="naicsSearch" 
     			dataSet={naicsList} 
-    			multiple={false} 
+    			multiple={true} 
     			styleWidth="100%"
     			ref="naicsSearch"
     			val={[this.state.currentNaics]}

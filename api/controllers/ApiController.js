@@ -330,7 +330,7 @@ module.exports = {
 				}
 			}
 		}
-		console.log(sql);
+		//console.log(sql);
 		var request = bigQuery.jobs.query({
 				kind: 'bigquery#queryRequest',
 				projectId: 'avail-wim',

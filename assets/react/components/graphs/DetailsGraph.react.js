@@ -24,7 +24,7 @@ var drawDetailGraph = function(details, zip) {
                 ;*/
             var chart = nv.models.lineChart()
                 .margin({left:60})
-                .useInteractiveGuideline(true)
+                .useInteractiveGuideline(false)
                 .transitionDuration(350)
                 .showLegend(false)
                 .showYAxis(true)
@@ -53,6 +53,15 @@ var avg2 = function(num1,num2) {
     return (num1+ num2) / 2;
 };
 
+var sumArr = function(arr) {
+    //return arr.reduce(function(a, b) { return a.y + b.y; }); //y u n owrk
+    var sum = 0;
+    for(var i in arr) {
+        sum += arr[i].y;
+    }
+    return sum;
+};
+
 var parseDetailData = function(data, zip) {
     //console.log("data that parseDetail is getting", data);
     var vals = [],
@@ -66,39 +75,46 @@ var parseDetailData = function(data, zip) {
         MAKE A LINE GRAPH.
     */
     
-
     //Need more error checking? or not, since I dictate what I send to this,
-    //console.log("Detail's zip", zip, "for data", data);
-    //console.log(data)
+    var tempObj = {}; //temp object for easier data processin'
     for(var yr in data) {
-        if(data[yr][zip] != 0 && !data[yr][zip])
+        if(data[yr][zip] != 0 && !data[yr][zip]) //bc 0 is false and i am dumb
             return "";
         var sum = 0;
-        for(var k in data[yr][zip]) {
-            if(k == "total")
-                continue;
-            sum += parseInt(data[yr][zip][k]) * sizeVals[sizesKeys.indexOf(k)];
+        for(var n in data[yr][zip]) { //for'in through the naics.
+
+            if(!tempObj[n])
+                tempObj[n] = [];
+            for(var k in data[yr][zip][n]) {
+                if(k == "total")
+                    continue;
+                sum += parseInt(data[yr][zip][n][k]) * sizeVals[sizesKeys.indexOf(k)];
+            }
+            tempObj[n].push({x: parseInt(yr), y: Math.round(sum)});
         }
-        vals.push({x: parseInt(yr), y: Math.round(sum)});
+        
     }
-    /*for(var size in sizes) { 
-        var vals = [];
-        for(var yr in data) {
-            if(data[yr][zip] != 0 && !data[yr][zip])
-                return ""; //does this if the data isn't loaded yet, so the data is still for the old zip code.
-            vals.push({"x": parseInt(yr), "y": parseInt(data[yr][zip][sizesKeys[size]])});
-        }
-        /*if(vals.length == 1){
-            console.log("one yr of data")
-            vals.push({});
-        }
-        toRet.push({
-            values: vals,
-            key: sizes[size]
+    /*
+        Sort by #emps, take top 10 
+    */
+
+    for(var naics in tempObj) {
+        vals.push({
+            values: tempObj[naics],
+            key: naics
         });
     }
-*/ 
-    return [{"values": vals}];
+
+    if(vals.length > 15) { //If a lot, show top 19?
+        vals.sort(function(a, b) {
+            var sumA = sumArr(a.values);
+            var sumB = sumArr(b.values);
+            if(a.key == '----' || a.key == '------') return 1; //bc don't want totals
+            if(b.key == '----' || b.key == '------') return -1;
+            return sumB-sumA;
+        });
+    }
+    return vals.slice(0, 10);
 };  
 
 var Graph = React.createClass({
@@ -113,7 +129,7 @@ var Graph = React.createClass({
             //console.log("zip is array!")
             this.props.zip = this.props.zip[0];
         }
-        try {
+        try { // b/c sometimes the data is derp.
             if(this.props.zip && Object.keys(this.props.detailsData).length > 0 && Object.keys(this.props.detailsData[Object.keys(this.props.detailsData)[0]])[0] == this.props.zip) {
                 //This makes sure that the data has caught up to the new zip code.
                 //Issue: what if data for "1994" doesn't exist in this instance of detailsdata?

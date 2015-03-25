@@ -27,11 +27,11 @@ module.exports = {
   	});
   	SailsWebApi.updateNaics(data);
   },
-  setCurrentVariable: function(data) {
+  setCurrentVariable: function(data) { //still needed? probably not.
     AppDispatcher.handleViewAction({
       type:ActionTypes.SET_CURRENT_VAR,
       variable: data
-    })
-}
+    });
+  }
 
 };

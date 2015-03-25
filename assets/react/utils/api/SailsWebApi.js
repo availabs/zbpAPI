@@ -12,7 +12,7 @@ var ServerActionCreators = require('../../actions/ServerActionsCreator');
 var defaults = {
   zip: ["10001"],
   year: "",
-  naics: "72"
+  naics: [""]
 }
 
 var currZip = defaults.zip;
@@ -104,6 +104,14 @@ module.exports = {
 
   updateNaics: function(naics) {
     currNaics = naics;
+    if(typeof currNaics == "string") {
+      currNaics = currNaics.split(",")
+    }
+    
+    if(!(currNaics instanceof Array)) { //no definite way to do this, bc js sucks
+      currNaics = [currNaics];
+    }
+    console.log("Updatin naics:", currNaics);
     this.zbpDetails(currZip, defaults.year, currNaics);
   },
 
@@ -119,12 +127,13 @@ module.exports = {
       ServerActionCreators.receiveTotals(type,resData, zips[0]);
     });
   },
+  //both year and zip should be passed as arrays?!?! maybe
   zbpDetails: function(zips, year, naics) {
 
     var yearPath = year || '';
-    var zipPost = {'zips':zips};
+    var post = {'zips':zips, 'naics':naics};
 
-    io.socket.post('/details/' + naics + '' + yearPath, zipPost, function(resData) {
+    io.socket.post('/details/' + yearPath, post, function(resData) {
       ServerActionCreators.receiveDetails(resData, zips, naics);
     });
   },

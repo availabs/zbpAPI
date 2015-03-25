@@ -109,7 +109,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Employees for Naics Code {this.state.naics}&nbsp; 
+                                Employees for Naics Code: {this.state.naics == "" ? "Top Ten Sectors by Employment" : this.state.naics}&nbsp; 
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>
