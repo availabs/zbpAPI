@@ -66,47 +66,8 @@ var simplifyForDetails = function(response) {
 			}
 		}
 	}
-	/*for(var row in response.rows){
-		var rowVals = response.rows[row].f;
 
-		if(!toReturn[rowVals[0].v]) {
-			toReturn[rowVals[0].v] = {};	
-		}
-
-		if(fields[0].name == 'year') {
-			for(var i=2; i<rowVals.length; i++) {
-				if(!toReturn[rowVals[0].v][rowVals[1].v]){
-					toReturn[rowVals[0].v][rowVals[1].v] = {};
-				}
-				if(fields[i].name.charAt(0) == 'f')
-					toReturn[rowVals[0].v][rowVals[1].v][sizes[i-2]] = rowVals[i].v;
-				else
-					toReturn[rowVals[0].v][rowVals[1].v][fields[i].name] = rowVals[i].v;
-			}
-		}
-		else {
-			for(var i=1; i<rowVals.length; i++) {
-				if(fields[i].name.charAt(0) == 'b'){
-					toReturn[rowVals[0].v][sizes[i-1]] = rowVals[i].v;
-				}
-				else{
-					//console.log()
-					toReturn[rowVals[0].v][fields[i].name] = rowVals[i].v;
-				}
-			}
-		}*/
-		
-
-	//}
 	return toReturn;
-
-	/*return response.rows.map(function(row){
-		return row.f.map(function(val, index){
-			var data = {};
-			data[response.schema.fields[index].name] = val.v;
-			return data;
-		});
-	});*/
 };
 
 var simplifyForTotals = function(response) {

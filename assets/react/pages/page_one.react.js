@@ -25,6 +25,19 @@ var fixVarName = function(varName) {
     }
 }
 
+var naicsGraphText = function(naicsList) {
+    if(naicsList == "")
+        return "Top Ten Naics Codes by Employment";
+    var toRet = "Employees for Naics Code";
+    if(naicsList.length > 1) {
+        toRet += "s: " + naicsList.toString();
+    }
+    else {
+        toRet += ": " + naicsList;
+    }
+    return toRet;
+}
+
 var SamplePage = React.createClass({
 
     getInitialState: function() {
@@ -109,7 +122,7 @@ var SamplePage = React.createClass({
                         <section className="widget">
                             <header>
                             <h4>
-                                Employees for Naics Code: {this.state.naics == "" ? "Top Ten Sectors by Employment" : this.state.naics}&nbsp; 
+                                {naicsGraphText(this.state.naics)}&nbsp; 
                                 <small>
                                     By Year for zipcode {this.state.zip}
                                 </small>

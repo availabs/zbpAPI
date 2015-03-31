@@ -4,8 +4,9 @@ var nv = require('../../../../node_modules/nvd3/nv.d3');
 var d3 = require('../../../../node_modules/d3/d3');
 
 var drawDetailGraph = function(details, zip) {
+    //console.log("Data received", details);
     if(details == {}) {
-        //console.log("drawDetailGraph received empty data");
+        console.log("drawDetailGraph received empty data");
         return "";
     }
     else {
@@ -80,9 +81,9 @@ var parseDetailData = function(data, zip) {
     for(var yr in data) {
         if(data[yr][zip] != 0 && !data[yr][zip]) //bc 0 is false and i am dumb
             return "";
-        var sum = 0;
-        for(var n in data[yr][zip]) { //for'in through the naics.
 
+        for(var n in data[yr][zip]) { //for'in through the naics.
+            var sum = 0;
             if(!tempObj[n])
                 tempObj[n] = [];
             for(var k in data[yr][zip][n]) {
@@ -113,8 +114,9 @@ var parseDetailData = function(data, zip) {
             if(b.key == '----' || b.key == '------') return -1;
             return sumB-sumA;
         });
+        return vals.slice(0, 10);
     }
-    return vals.slice(0, 10);
+    return vals;
 };  
 
 var Graph = React.createClass({

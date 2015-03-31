@@ -111,7 +111,7 @@ module.exports = {
     if(!(currNaics instanceof Array)) { //no definite way to do this, bc js sucks
       currNaics = [currNaics];
     }
-    console.log("Updatin naics:", currNaics);
+    //console.log("Updatin naics:", currNaics);
     this.zbpDetails(currZip, defaults.year, currNaics);
   },
 

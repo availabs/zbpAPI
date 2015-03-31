@@ -11,7 +11,7 @@ module.exports = {
 		res.view({})
 	},
 	home:function(req,res){
-		res.view({});
+		res.view({page:'docs'});
 	}
 	
 };

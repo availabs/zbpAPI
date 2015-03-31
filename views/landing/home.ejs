@@ -35,7 +35,7 @@
 <div class="bs-docs-header" id="content">
    <div class="container">
       <h1>API Documentation</h1>
-      <p>A REST API for accessing the <a href="http://www.census.gov/econ/cbp/">Census Zip Business Patterns</a> dataset from 1994-2012.</p>
+      <p class="tab">A REST API for accessing the <a href="http://www.census.gov/econ/cbp/">Census Zip Business Patterns</a> dataset from 1994-2012.</p>
    </div>
 </div>
 <div class="container bs-docs-container">
@@ -46,18 +46,18 @@
             <h1 id="overview" class="page-header">Overview</h1>
             <p class="lead">The Census Zip Business Patterns dataset is amazing!</p>
             <h3 id="overview-about">About the Data</h3>
-            <p>County Business Patterns (CBP) is an annual series that provides subnational economic data by industry. This series includes the number of establishments, employment during the week of March 12, first quarter payroll, and annual payroll. This data is useful for studying the economic activity of small areas; analyzing economic changes over time; and as a benchmark for other statistical series, surveys, and databases between economic censuses. Businesses use the data for analyzing market potential, measuring the effectiveness of sales and advertising programs, setting sales quotas, and developing budgets. Government agencies use the data for administration and planning.</p>
+            <p class="tab">County Business Patterns (CBP) is an annual series that provides subnational economic data by industry. This series includes the number of establishments, employment during the week of March 12, first quarter payroll, and annual payroll. This data is useful for studying the economic activity of small areas; analyzing economic changes over time; and as a benchmark for other statistical series, surveys, and databases between economic censuses. Businesses use the data for analyzing market potential, measuring the effectiveness of sales and advertising programs, setting sales quotas, and developing budgets. Government agencies use the data for administration and planning.</p>
 
-            <p>ZIP Code Business Patterns data is available shortly after the release of County Business Patterns. It provides the number of establishments by employment-size classes by detailed industry in the U.S.</p>
+            <p class="tab">ZIP Code Business Patterns data is available shortly after the release of County Business Patterns. It provides the number of establishments by employment-size classes by detailed industry in the U.S.</p>
 
-            <p>These two programs cover most of the country's economic activity based on establishments, with a few noted exclusions. For more information on the coverage and methodology of CBP, see How the Data are Collected. For information on businesses without paid employees, see Nonemployer Statistics.
+            <p class="tab">These two programs cover most of the country's economic activity based on establishments, with a few noted exclusions. For more information on the coverage and methodology of CBP, see How the Data are Collected. For information on businesses without paid employees, see Nonemployer Statistics.
             Data for 2012 were released in May 2014. For help accessing the data via hypertext tables or American FactFinder, please refer to the Data User Guide [PDF].</p>
 
-            <p>For frequently asked questions (FAQs), visit Ask.Census.Gov or click the FAQs tab at the top of the screen. Enter 'CBP' or 'County Business Patterns' into the search box to narrow the results.</p>
+            <p class="tab">For frequently asked questions (FAQs), visit Ask.Census.Gov or click the FAQs tab at the top of the screen. Enter 'CBP' or 'County Business Patterns' into the search box to narrow the results.</p>
 
 
             <h3 id="overview-about-us">About Us</h3>
-            <p> We created this API for the Kaufman Foundation grant to do some stuff..., in doing our own analysis of the data we also wanted to make the data set easily accessible for other researchers.</p>
+            <p class="tab"> We created this API for the Kaufman Foundation grant to do some stuff..., in doing our own analysis of the data we also wanted to make the data set easily accessible for other researchers.</p>
 
 
             
@@ -67,7 +67,7 @@
             <div class="bs-docs-section">
             <h1 id="geo" class="page-header">Geography Routes</h1>
              <h3 id="geo-zip">/zipcodes/:fips</h3>
-              <p>Returns a list of zip codes. If no fips code is passed a list of all US zip codes is returned. If a 2 digit fips is passed all zip codes within the corresponding state are returned. If a 7 Digit Fips code is passed a list of zip codes in that <a href="http://www2.census.gov/geo/ua/ua_list_all.txt">Urbanized Area</a> are returned.</p>
+              <p class="tab">Returns a list of zip codes. If no fips code is passed a list of all US zip codes is returned. If a 2 digit fips is passed all zip codes within the corresponding state are returned. If a 7 Digit Fips code is passed a list of zip codes in that <a href="http://www2.census.gov/geo/ua/ua_list_all.txt">Urbanized Area</a> are returned.</p>
 
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
@@ -94,7 +94,7 @@
               </div>
 
               <h3 id="geo-geo">/zipgeo/:fips</h3>
-              <p>Returns a topojson of some geography.</p>
+              <p class="tab">Returns a topojson of some geography.</p>
 
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
@@ -142,7 +142,7 @@
               </ul>
               <h3 id="totals-allyears">/totals/:variable_name/</h3>
               
-              <p>Returns a list of the requested variable for each of the POSTed zip codes from 1994 to 2012.</p>
+              <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes from 1994 to 2012.</p>
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
                  <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name</span>
@@ -170,7 +170,7 @@
               </div>
             </div>
             <h3 id="totals-oneyear">/totals/:variable_name/:year</h3>
-            <p>Returns a list of the requested variable for each of the POSTed zip codes in the year requested (from 1994 to 2012).</p>
+            <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes in the year requested (from 1994 to 2012).</p>
             <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
             <div class="highlight">
                <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name/:year</span>
@@ -195,7 +195,7 @@
             <div class="bs-docs-section">
               <h1 id="details" class="page-header">Zip Business Patterns Details Routes</h1>
               <h3 id="details-key">Details Key</h3>
-                <p>Each zip code contains the figures of <ul>
+                <p class="tab">Each zip code contains the figures of <ul>
                   <li>total establishments,</li>
                   <li>number of establishments with 1-4 employees,</li>
                   <li>number of establishments with 5-9 employees,</li>
@@ -210,7 +210,7 @@
                 
               <h3 id="details-allyears">/details/:naics/</h3>
               
-              <p>Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes from 1994 to 2012.</p>
+              <p class="tab">Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes from 1994 to 2012.</p>
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
                  <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/details/:naics</span>
@@ -255,7 +255,7 @@
               </div>
             </div>
             <h3 id="details-oneyear">/details/:naics/:year</h3>
-            <p>Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes in the year requested (from 1994 to 2012).</p>
+            <p class="tab">Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes in the year requested (from 1994 to 2012).</p>
             <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
             <div class="highlight">
                <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name/:year</span>

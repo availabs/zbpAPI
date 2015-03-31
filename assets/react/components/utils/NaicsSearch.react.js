@@ -13,6 +13,7 @@ var NaicsSearch = React.createClass({
       };
     },
     handleChange: function(e) {
+      
       ClientActionsCreator.setCurrentNaics(e.target.value);
     },
 

@@ -1,3 +1,10 @@
 body.background-dark{
 	background-color:#CCC;
 }
+body.background-dark.docs{
+	background-color:#fff;
+}
+
+.tab {
+	text-indent:20px;
+}
