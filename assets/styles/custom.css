@@ -5,6 +5,14 @@ body.background-dark.docs{
 	background-color:#fff;
 }
 
+.page-header {
+	margin-left: 0;
+}
+
 .tab {
 	text-indent:20px;
+}
+
+.emps {
+	margin-left: 20px;
 }

@@ -127,6 +127,38 @@
 
               </div>
               
+            
+
+            <h3 id="geo-naics">/naics/:ncode</h3>
+            <p class="tab">Returns a list of naics codes related to <code>:ncode</code>, or all naics if no <code>:ncode</code> is provided.</p>
+            
+            <div class="highlight">
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/naics/:ncode </span></code></pre>
+
+            </div>
+            <h4>Output:</h4>
+               <div class="highlight">
+                 <pre><code class="language-json" data-lang="json"><span class="cp">
+{
+  "data": [
+    "----",
+    "------",
+    "07--",
+    "0700",
+    "0710",
+    "0720",
+    "0740",
+    "0750",
+    "0760",
+    "0761",
+    ...
+  ] 
+}
+
+    </span></code></pre>
+
+              </div>
+              
             </div>
             <!-- 
                End of Geography section
@@ -195,17 +227,18 @@
             <div class="bs-docs-section">
               <h1 id="details" class="page-header">Zip Business Patterns Details Routes</h1>
               <h3 id="details-key">Details Key</h3>
-                <p class="tab">Each zip code contains the figures of <ul>
-                  <li>total establishments,</li>
-                  <li>number of establishments with 1-4 employees,</li>
-                  <li>number of establishments with 5-9 employees,</li>
-                  <li>number of establishments with 10-19 employees,</li>
-                  <li>number of establishments with 20-49 employees,</li>
-                  <li>number of establishments with 50-99 employees,</li>
-                  <li>number of establishments with 100-249 employees,</li>
-                  <li>number of establishments with 250-499 employees,</li>
-                  <li>number of establishments with 500-999 employees, and </li>
-                  <li>number of establishments with 1000 or more employees</li>
+                <p class="tab">Each zip code contains the figures of 
+                <ul class="list-group">
+                  <li class="list-group-item emps">total establishments,</li>
+                  <li class="list-group-item emps">number of establishments with 1-4 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 5-9 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 10-19 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 20-49 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 50-99 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 100-249 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 250-499 employees,</li>
+                  <li class="list-group-item emps">number of establishments with 500-999 employees, and </li>
+                  <li class="list-group-item emps">number of establishments with 1000 or more employees</li>
                 </ul> in that zip code.</p>
                 
               <h3 id="details-allyears">/details/:naics/</h3>
@@ -308,6 +341,7 @@
                   <ul class="nav">
                      <li class=""><a href="#geo-zip">Zip Code Lists</a></li>
                      <li class=""><a href="#geo-geo">Zip Code Geographies</a></li>
+                     <li class=""><a href="#geo-naics">Naics Code Lists></a></li>
                   </ul>
                </li>
                <li class="">
