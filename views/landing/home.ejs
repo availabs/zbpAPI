@@ -44,7 +44,6 @@
 
          <div class="bs-docs-section">
             <h1 id="overview" class="page-header">Overview</h1>
-            <p class="lead">The Census Zip Business Patterns dataset is amazing!</p>
             <h3 id="overview-about">About the Data</h3>
             <p class="tab">County Business Patterns (CBP) is an annual series that provides subnational economic data by industry. This series includes the number of establishments, employment during the week of March 12, first quarter payroll, and annual payroll. This data is useful for studying the economic activity of small areas; analyzing economic changes over time; and as a benchmark for other statistical series, surveys, and databases between economic censuses. Businesses use the data for analyzing market potential, measuring the effectiveness of sales and advertising programs, setting sales quotas, and developing budgets. Government agencies use the data for administration and planning.</p>
 
@@ -53,25 +52,22 @@
             <p class="tab">These two programs cover most of the country's economic activity based on establishments, with a few noted exclusions. For more information on the coverage and methodology of CBP, see How the Data are Collected. For information on businesses without paid employees, see Nonemployer Statistics.
             Data for 2012 were released in May 2014. For help accessing the data via hypertext tables or American FactFinder, please refer to the Data User Guide [PDF].</p>
 
-            <p class="tab">For frequently asked questions (FAQs), visit Ask.Census.Gov or click the FAQs tab at the top of the screen. Enter 'CBP' or 'County Business Patterns' into the search box to narrow the results.</p>
-
-
             <h3 id="overview-about-us">About Us</h3>
-            <p class="tab"> We created this API for the Kaufman Foundation grant to do some stuff..., in doing our own analysis of the data we also wanted to make the data set easily accessible for other researchers.</p>
-
-
+            <p class="tab"> 
+              In December 2014, The Ewing Marion Kauffman Foundation awarded AVAIL with a grant to create an Entrepreneurial Landscape Analysis Tool that shows business climate change over time. This API is for allowing easy access to the Zip Business Patterns dataset(s) from the US census to be used for that webtool.
+            </p>
             
             <!-- 
                End of Overview section
             -->
             <div class="bs-docs-section">
             <h1 id="geo" class="page-header">Geography Routes</h1>
-             <h3 id="geo-zip">/zipcodes/:fips</h3>
-              <p class="tab">Returns a list of zip codes. If no fips code is passed a list of all US zip codes is returned. If a 2 digit fips is passed all zip codes within the corresponding state are returned. If a 7 Digit Fips code is passed a list of zip codes in that <a href="http://www2.census.gov/geo/ua/ua_list_all.txt">Urbanized Area</a> are returned.</p>
+             <h3 id="geo-zip">/zipcodes/:type/:fips</h3>
+              <p class="tab">Returns a list of zip codes. If no fips code is passed a list of all US zip codes is returned. <code>:type</code> specifies whether the fips code is for a metro area, county, or state. If <code>:type</code> is specified to be "metro", then all zip codes in that metro area are returned; the same applies for "county" and "state".</p>
 
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
-                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/zipcodes </span></code></pre>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/zipcodes </span></code></pre>
 
               </div>
 
@@ -174,11 +170,14 @@
               </ul>
               <h3 id="totals-allyears">/totals/:variable_name/</h3>
               
-              <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes from 1994 to 2012.</p>
+              <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes from 1994 to 2012 or for each of the zip codes within the specified FIPS code.</p>
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
-                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name</span>
-<span class="s">required</span> <span class="nt">POST</span>: <span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]}</span>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/totals/:variable_name</span>
+<span class="s">required</span> <span class="nt">POST</span>: 
+<span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]} </span> 
+or
+<span class="na">fips- An object with attributes of FIPS code type (metro, county, or state) and FIPS code ex {"fips":{"type": "metro", "code": "63217"}}</span>
                  </code></pre>
               </div>
               <h4>Output:</h4>
@@ -202,13 +201,16 @@
               </div>
             </div>
             <h3 id="totals-oneyear">/totals/:variable_name/:year</h3>
-            <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes in the year requested (from 1994 to 2012).</p>
+            <p class="tab">Returns a list of the requested variable for each of the POSTed zip codes or for each of the zip codes within the specified FIPS code in the year requested (from 1994 to 2012).</p>
             <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
             <div class="highlight">
-               <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name/:year</span>
-<span class="s">required</span> <span class="nt">POST</span>: <span class="na">zips - An array of zip codes ex {"zips": ["99517","99516"]}</span>
-               </code></pre>
-            </div>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/totals/:variable_name/:year</span>
+<span class="s">required</span> <span class="nt">POST</span>: 
+<span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]} </span>
+or 
+<span class="na">fips- An object with attributes of FIPS code type (metro, county, or state) and FIPS code ex {"fips":{"type": "metro", "code": "63217"}}</span>
+                 </code></pre>
+              </div>
             <h4>Output:</h4>
              <div class="highlight">
                <pre><code class="language-json" data-lang="json"><span class="cp">
@@ -241,13 +243,18 @@
                   <li class="list-group-item emps">number of establishments with 1000 or more employees</li>
                 </ul> in that zip code.</p>
                 
-              <h3 id="details-allyears">/details/:naics/</h3>
+              <h3 id="details-allyears">/details</h3>
               
-              <p class="tab">Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes from 1994 to 2012.</p>
+              <p class="tab">Returns, for each of the POSTed zip codes or for each of the zip codes within the specified FIPS code, a list of the business figures for those businesses categorized under the given NAICS code in those zipcodes from 1994 to 2012.</p>
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
-                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/details/:naics</span>
-<span class="s">required</span> <span class="nt">POST</span>: <span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="na">naics - An array of naics codes ex {"naics": ["72", "13"]}</span>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/details</span>
+<span class="s">required</span> <span class="nt">POST</span>: 
+<span class="na">naics - An array of naics codes ex {"naics": ["72", "13"]}</span> 
+and one of the following:
+<span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]} </span>
+or
+<span class="na">fips- An object with attributes of FIPS code type (metro, county, or state) and FIPS code ex {"fips":{"type": "metro", "code": "63217"}}</span>
                  </code></pre>
               </div>
               <h4>Output:</h4>
@@ -287,14 +294,19 @@
 
               </div>
             </div>
-            <h3 id="details-oneyear">/details/:naics/:year</h3>
-            <p class="tab">Returns, for each of the POSTed zip codes, a list of the business figures for those zipcodes in the year requested (from 1994 to 2012).</p>
+            <h3 id="details-oneyear">/details/:year</h3>
+            <p class="tab">Returns, for each of the POSTed zip codes or for each of the zip codes within the specified FIPS code, a list of the business figures for those businesses categorized under the given NAICS code in those zipcodes in the year requested (from 1994 to 2012).</p>
             <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
             <div class="highlight">
-               <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.avialabs.org/totals/:variable_name/:year</span>
-<span class="s">required</span> <span class="nt">POST</span>: <span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]}</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="na">naics - An array of naics codes ex {"naics": ["72", "13"]}</span>
-               </code></pre>
-            </div>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/details/:year</span>
+<span class="s">required</span> <span class="nt">POST</span>: 
+<span class="na">naics - An array of naics codes ex {"naics": ["72", "13"]}</span>
+and one of the following:
+<span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]} </span>
+or
+<span class="na">fips- An object with attributes of FIPS code type (metro, county, or state) and FIPS code ex {"fips":{"type": "metro", "code": "63217"}}</span>
+                 </code></pre>
+              </div>
             <h4>Output:</h4>
              <div class="highlight">
                <pre><code class="language-json" data-lang="json"><span class="cp">
@@ -341,7 +353,7 @@
                   <ul class="nav">
                      <li class=""><a href="#geo-zip">Zip Code Lists</a></li>
                      <li class=""><a href="#geo-geo">Zip Code Geographies</a></li>
-                     <li class=""><a href="#geo-naics">Naics Code Lists></a></li>
+                     <li class=""><a href="#geo-naics">Naics Code Lists</a></li>
                   </ul>
                </li>
                <li class="">

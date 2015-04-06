@@ -20,3 +20,7 @@ body.background-dark.docs{
 .navbar-nav>li>a {
 	top:13px;
 }
+
+.postText {
+	padding-left: 15px;
+}
