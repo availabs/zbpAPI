@@ -27,7 +27,7 @@ module.exports = {
   	});
   	SailsWebApi.updateNaics(data);
   },
-  setCurrentVariable: function(data) { //still needed? probably not.
+  setCurrentVariable: function(data) { 
     AppDispatcher.handleViewAction({
       type:ActionTypes.SET_CURRENT_VAR,
       variable: data

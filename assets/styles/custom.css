@@ -16,3 +16,7 @@ body.background-dark.docs{
 .emps {
 	margin-left: 20px;
 }
+
+.navbar-nav>li>a {
+	top:13px;
+}

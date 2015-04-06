@@ -16,7 +16,7 @@ module.exports.routes = {
   '/':'LandingController.home',
 
   '/zipcodes' : 'APIController.zipcode_list', //No fips params
-  '/zipcodes/:fips' : 'APIController.zipcode_list',
+  '/zipcodes/:type/:fips' : 'APIController.zipcode_list',
   '/geozipcodes' : 'APIController.zipcode_geo',
   '/naics' : 'APIController.naics_list',     
   '/naics/:ncode' : 'APIController.naics_list',

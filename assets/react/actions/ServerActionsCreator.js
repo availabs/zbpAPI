@@ -66,7 +66,6 @@ module.exports = {
     });
   },
   receiveTotals: function(varName, data, zip) {
-    //console.log(varName, " data received ",data, "at server actions creator");
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,
@@ -75,7 +74,6 @@ module.exports = {
     });
   },
   receiveDetails: function(data, zip, naics) {
-    //console.log("Details data", data);
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_DETAILS,
       details: data,
