@@ -32,6 +32,14 @@ module.exports = {
       type:ActionTypes.SET_CURRENT_VAR,
       variable: data
     });
+  },
+  setCurrentFips: function(type, code) {
+    AppDispatcher.handleViewAction({
+      type: ActionTypes.SET_CURRENT_FIPS,
+      type: type,
+      code: code
+    });
+    SailsWebApi.updateFips(type, code);
   }
 
 };

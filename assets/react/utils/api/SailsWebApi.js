@@ -12,11 +12,15 @@ var ServerActionCreators = require('../../actions/ServerActionsCreator');
 var defaults = {
   zip: ["10001"],
   year: "",
-  naics: [""]
+  naics: [""],
+  fipsCode: null,
+  fipsType: null
 }
 
-var currZip = defaults.zip;
-var currNaics = defaults.naics;
+var currZip = defaults.zip,
+    currNaics = defaults.naics,
+    currFipsCode = defaults.fipsCode,
+    currFipsType = defaults.fipsType; 
 
 module.exports = {
 
@@ -94,6 +98,8 @@ module.exports = {
     //console.log("Updating zip with new zip", zip);
     //add error checking of zip later?
     currZip = zip;
+    currFipsCode = null;
+    currFipsType = null;
     this.zpbTotals("annual_payroll", currZip, defaults.year);
     this.zpbTotals("q1_payroll", currZip, defaults.year);
     this.zpbTotals("employees", currZip, defaults.year);
@@ -115,38 +121,59 @@ module.exports = {
     this.zbpDetails(currZip, defaults.year, currNaics);
   },
 
+  updateFips: function(type, code) {
+    currZip = null;
+    currFipsCode = code;
+    currFipsType = type;
+
+  }
+
   //---------------------------------------------------
   // Voters
   //---------------------------------------------------
-  zpbTotals: function(type,zips,year){ //Should be only one zip!
-    
+  zpbTotals: function(codes, type, year){ //Should be only one zip!
     var yearPath = year || '';
-    var zipPost = {'zips':zips}
-    this.zbpGeo(zips);
-    io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
-      ServerActionCreators.receiveTotals(type,resData, zips[0]);
-    });
+    if(Array.isArray(codes)) { // if zips
+      
+      var zipPost = {'zips':codes}
+      this.zbpGeo(zips);
+      io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
+        ServerActionCreators.receiveTotals(type,resData, codes[0]);
+      });
+    }
+    else {
+      var fipsPost = {'fips': fips};
+
+    }
   },
   //both year and zip should be passed as arrays?!?! maybe
-  zbpDetails: function(zips, year, naics) {
+  zbpDetails: function(codes, year, naics) {
 
     var yearPath = year || '';
-    var post = {'zips':zips, 'naics':naics};
+    if(Array.isArray(codes)) {
+      var post = {'zips':zips, 'naics':naics};
 
-    io.socket.post('/details/' + yearPath, post, function(resData) {
-      ServerActionCreators.receiveDetails(resData, zips, naics);
-    });
+      io.socket.post('/details/' + yearPath, post, function(resData) {
+        ServerActionCreators.receiveDetails(resData, zips, naics);
+      });
+    }
+    else {
+      
+    }
   },
   zipList: function() {
     io.socket.get('/zipcodes',function(resData){
       ServerActionCreators.receiveZipList(resData);
     });
   },
-  zbpGeo: function(zips) {
-    var zipPost = {'zips':zips};
-    io.socket.post('/geozipcodes', zipPost, function(resData) {
-      ServerActionCreators.receiveGeoJSON(resData);
-    });
+  zbpGeo: function(codes) { //could be zips or fips
+    if(Array.isArray(codes)) { //zips
+      var zipPost = {'zips':zips};
+      io.socket.post('/geozipcodes', zipPost, function(resData) {
+        ServerActionCreators.receiveGeoJSON(resData);
+      });
+    }
+
   },
   naicsList: function() {    
     io.socket.get('/naics', function(resData) {

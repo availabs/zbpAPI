@@ -434,8 +434,45 @@ module.exports = {
 	
 	zipcode_geo : function(req,res){
 		//add error checking iff the zips array isn't actually an array
+		var sql = '';
 		if(!req.param('zips')) {
 			res.json({status:500, responseText:'Error, must pass array of zip codes.'})
+		}
+		if(!req.param('fips') && !req.param('zips')) {
+			res.json({status:500,responseText:'Error, must pass zips or fips codes'});
+		}
+		if(req.param('zips') && req.param('fips')) {
+			res.json({status:500,responseText:'Error, only pass either zips or fips.'})
+		}
+		else if(req.param('fips')) {
+			var fips = req.param('fips');
+			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
+				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
+			}
+			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
+				res.json({status:500,responseText:'Error, type and code must be Strings.'});
+			}
+			else if(!validType(type)) {
+				res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
+			}
+			else {
+				var fipsCode = fips.code;
+				var fipsType = fips.type;
+				switch(fipsType) {
+					case 'metro': //uac
+						sql = 'SELECT ST_ASGeoJSON(geom) as geom FROM tl_2013_us_uac10 WHERE geoid10 = \'' + fipsCode + '\';';
+					break;
+					case 'state':
+						sql = 'SELECT ST_ASGeoJSON(the_geom) as geom FROM tl_2013_us_state WHERE geoid = \''+ fipsCode + '\';';
+					break;
+					case 'county':
+						sql = 'SELECT ST_ASGeoJSON(the_geom) as geom FROM tl_2013_us_county WHERE geoid = \'' + fipsCode + '\';';
+					break;
+					default:
+						sql = '';
+				}
+
+			}
 		}
 		else {
 			var zips = JSON.stringify(req.param('zips')).replace('[', '').replace(']','').replace(new RegExp('[\"]', 'g'), '\'');
@@ -445,26 +482,27 @@ module.exports = {
 			// where ST_Overlaps(ua.geom, zip.geom) and ua.name10 like '%NY%' 
 			// group by  ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom)";
 			
-			var sql = "Select ST_ASGeoJSON(geom) as geom,geoid10 from tl_2013_us_zcta510 where geoid10 in (" + zips + ")";
+			sql = "Select ST_ASGeoJSON(geom) as geom,geoid10 from tl_2013_us_zcta510 where geoid10 in (" + zips + ")";
 			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
-			Geocensus.query(sql,function(err,data){
-				if(err) console.log('Error', err);
-				var geoJSON = {};
-				geoJSON.type = "FeatureCollection";
-				geoJSON.features = [];
-				data.rows.forEach(function(row,index){
-					var feature = {};
-					feature.type ="Feature";
-					feature.properties = {};
-					feature.properties.id = index;
-					feature.properties.geoid = row.geoid10;
-					feature.geometry = JSON.parse(row.geom);
-					geoJSON.features.push(feature);
-					
-				})
-				res.json(geoJSON);
-			});
+			
 		}
+		Geocensus.query(sql,function(err,data){
+			if(err) console.log('Error in geocensus', err);
+			var geoJSON = {};
+			geoJSON.type = "FeatureCollection";
+			geoJSON.features = [];
+			data.rows.forEach(function(row,index){
+				var feature = {};
+				feature.type ="Feature";
+				feature.properties = {};
+				feature.properties.id = index;
+				//feature.properties.geoid = row.geoid10;
+				feature.geometry = JSON.parse(row.geom);
+				geoJSON.features.push(feature);
+				
+			})
+			res.json(geoJSON);
+		});
 	}
   /**
    * Overrides for the settings in `config/controllers.js`

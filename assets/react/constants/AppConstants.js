@@ -14,6 +14,7 @@ module.exports = {
     SET_CURRENT_ZIPCODE:null,
     SET_CURRENT_NAICS: null,
     SET_CURRENT_VAR: null,
+    SET_CURRENT_FIPS: null,
     //-------------------------------------------------------
     //Server actions 
     //-------------------------------------------------------
