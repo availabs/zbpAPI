@@ -65,19 +65,17 @@ module.exports = {
       naics: data
     });
   },
-  receiveTotals: function(varName, data, zip) {
+  receiveTotals: function(varName, data) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,
-      totals: data,
-      zip: zip
+      totals: data
     });
   },
-  receiveDetails: function(data, zip, naics) {
+  receiveDetails: function(data, naics) {
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_DETAILS,
       details: data,
-      zip: zip,
       naics: naics
     });
   },

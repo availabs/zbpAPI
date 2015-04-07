@@ -15,21 +15,25 @@ var React = require('react'),
     App = require('./pages/layout.react'),
 
 //  --- Pages
-    PageOne = require('./pages/page_one.react'),
-    UserAdmin = require('./pages/UserAdmin.react')
+    ZipAnalysis = require('./pages/zip_analysis.react'),
+    MetroAnalysis = require('./pages/metro_analysis.react'),
+    CountyAnalysis = require('./pages/county_analysis.react'),
+    StateAnalysis = require('./pages/county_analysis.react'),
 
 // --- Server API
     sailsWebApi = require('./utils/api/SailsWebApi.js');
 
 // --- Initialize the API with the session User  
-sailsWebApi.initAdmin();
+sailsWebApi.initZip();
 
 //  --- Routes 
 var routes = (
   <Route name="app" path="/" handler={App}>
-    <Route name="one" handler={PageOne}/>
-    <Route name="userAdmin" path="admin/users"  handler={UserAdmin} />
-    <DefaultRoute handler={PageOne}/>
+    <Route name="zips" path='/zips' handler={ZipAnalysis}/>
+    <Route name="metro" path='/metro' handler={MetroAnalysis}/>
+    <Route name="county" path='/county' handler={CountyAnalysis}/>
+    <Route name="state" path='/state' handler={StateAnalysis}/>
+    <DefaultRoute handler={ZipAnalysis}/>
   </Route>
 );
 

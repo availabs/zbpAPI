@@ -17,8 +17,10 @@ var _appSection = null;
 
 var _menus = {
   admin:[
-    {text:'Dashboard',icon:'fa fa-home',action:'one',type:'Route'},
-    {text:'User Admin',icon:'fa fa-users',action:'userAdmin',type:'Route'}         
+    {text:'Zip Analysis', icon:'fa fa-home', action:'zips', type:'Route'},
+    {text:'Urban Area Analysis', icon:'fa fa-building', action:'metro', type:'Route'},
+    {text: 'County Analysis', icon: 'fa fa-map-marker', action: 'county', type: 'Route'},
+    {text: 'State Analysis', icon: 'fa fa-globe', action: 'state', type: 'Route'}
   ],
  
 }
@@ -56,7 +58,7 @@ AppStore.dispatchToken = AppDispatcher.register(function(payload) {
   switch(action.type) {
 
     case ActionTypes.SET_APP_SECTION:
-      console.log('set app section in app store')
+      //console.log('set app section in app store')
       _appSection = action.section
       AppStore.emitChange();
     break;

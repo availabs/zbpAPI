@@ -15,10 +15,10 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
 
 var _zipcodeList = [],
     _totals = {
-      annual_payroll:{},
-      q1_payroll:{},
-      employees:{},
-      establishments:{}
+      "annual_payroll":{},
+      "q1_payroll":{},
+      "employees":{},
+      "establishments":{}
     },
     _variable = "annual_payroll",
     _details = {},
@@ -26,7 +26,12 @@ var _zipcodeList = [],
     _naics = "Top Ten Sectors by Employment",
     _naicsList = [],
     _chosenVariable = "annual_payroll",
-    _geoJSON = {};
+    _geoJSON = {},
+    _fips = {
+      "metro": "",
+      "county": "",
+      "state": ""
+    };
 
 function _addUsers(rawData) {
   //console.log('stores/zbpStore/_addUsers',rawData);
@@ -72,6 +77,9 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getZip: function() {
     return _zip;
+  },
+  getFips: function(type) {
+    return _fips[type]; //error checking?
   },
   getTotals: function(varName) { 
     return _totals;
@@ -141,6 +149,11 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     
     case ActionTypes.SET_CURRENT_NAICS:
       _naics = action.naics;
+      zbpStore.emitChange();
+    break;
+
+    case ActionTypes.SET_CURRENT_FIPS:
+      _fips[action.type] = action.code;
       zbpStore.emitChange();
     break;
 

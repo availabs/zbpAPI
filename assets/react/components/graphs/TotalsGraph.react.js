@@ -34,7 +34,7 @@ var drawTotalGraph = function(variable, totals, zip) {
                 .axisLabelDistance(-5);
 
             d3.select('#' + variable)
-                .datum(parseTotalData(totals, zip))
+                .datum(zip ? parseTotalData(totals, zip) : parseTotalData(totals))
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -72,25 +72,43 @@ var parseTotalData = function(data, zip) {
             ...
         }
     */
-    if(typeof data[Object.keys(data)[0]] == "object") { //If we have more than one year. Should always be the case.
-        //console.log("Total's zip", zip, "for data", data);
+    if(zip) {
+        if(typeof data[Object.keys(data)[0]] == "object") { //If we have more than one year. Should always be the case.
+            //console.log("Total's zip", zip, "for data", data);
 
-        for(var yr in data) {
-            if(data[yr][zip] != 0 && !data[yr][zip]){ //b/c that data can be 0 sometimes.
-                //console.log("Empty graph for", zip, data);
-                return ""; //does this if the data isn't loaded yet, so the data is still for the old zip code.
+            for(var yr in data) {
+                if(data[yr][zip] != 0 && !data[yr][zip]){ //b/c that data can be 0 sometimes.
+                    //console.log("Empty graph for", zip, data);
+                    return ""; //does this if the data isn't loaded yet, so the data is still for the old zip code.
+                }
+                vals.push({"x": yr, "y": data[yr][zip]});
+
             }
-            vals.push({"x": yr, "y": data[yr][zip]});
+            toRet.push({
+                values: vals,
+                key: zip
+            });
 
+        }
+        else { //shouldn't happen w/ line chart demo.
+            console.log("Data != object! or something.");
+        }
+    }
+    else {
+        for(var yr in data) {
+            var sum = 0;
+            for(var z in data) {
+                if(data[yr][z] != 0 && !data[yr][z]) {
+                    return "";
+                }
+                sum += data[yr][z];
+            }
+            vals.push({"x": yr, "y": sum});
         }
         toRet.push({
             values: vals,
             key: zip
         });
-
-    }
-    else { //shouldn't happen w/ line chart demo.
-        console.log("Data != object! or something.");
     }
     //console.log("returning toRet from totals", toRet);
     return toRet;
@@ -105,16 +123,21 @@ var Graph = React.createClass({
         }
     },
     render: function() {
-        if(this.props.zip.constructor === Array) {
-            //console.log("zip is array!")
-            this.props.zip = this.props.zip[0];
+        if(this.props.zip) {
+            if(this.props.zip.constructor === Array) {
+                //console.log("zip is array!")
+                this.props.zip = this.props.zip[0];
+            }
+            if(this.props.variable && Object.keys(this.props.totalData).length > 0 && this.props.zip && Object.keys(this.props.totalData["2000"])[0] == this.props.zip){
+                drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
+                //console.log("curr data for ", this.props.variable, " ", this.props.totalData)
+            }
+            else if(Object.keys(this.props.totalData).length > 0) {
+                //console.log("No current data render side for zip", this.props.zip, "for var", this.props.variable);
+            }
         }
-        if(this.props.variable && Object.keys(this.props.totalData).length > 0 && this.props.zip && Object.keys(this.props.totalData["2000"])[0] == this.props.zip){
-            drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
-            //console.log("curr data for ", this.props.variable, " ", this.props.totalData)
-        }
-        else if(Object.keys(this.props.totalData).length > 0) {
-            //console.log("No current data render side for zip", this.props.zip, "for var", this.props.variable);
+        else {
+            drawTotalGraph(this.props.variable, this.props.totalData);
         }
         return (
         	<div>

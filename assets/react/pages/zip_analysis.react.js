@@ -38,7 +38,7 @@ var naicsGraphText = function(naicsList) {
     return toRet;
 }
 
-var SamplePage = React.createClass({
+var ZipAnalysis = React.createClass({
 
     getInitialState: function() {
         return {
@@ -78,7 +78,7 @@ var SamplePage = React.createClass({
     render: function() {
         return (
         	<div className="content container">
-            	<h2 className="page-title">Dashboard <small>Statistics and more</small></h2>
+            	<h2 className="page-title">Zip Analysis <small>Business Statistics, Analyzed by Zip Code</small></h2>
                 <div className="row">
                     <div className="col-lg-8">
                         <section className="widget">
@@ -157,4 +157,4 @@ var SamplePage = React.createClass({
     }
 });
 
-module.exports = SamplePage;
+module.exports = ZipAnalysis;

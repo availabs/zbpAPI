@@ -13,44 +13,43 @@ var defaults = {
   zip: ["10001"],
   year: "",
   naics: [""],
-  fipsCode: null,
-  fipsType: null
+  metroFips: "63217",
+  countyFips: "36061",
+  stateFips: "36"
 }
 
 var currZip = defaults.zip,
     currNaics = defaults.naics,
-    currFipsCode = defaults.fipsCode,
-    currFipsType = defaults.fipsType; 
+    currFips = {"metro": defaults.metroFips, "county": defaults.countyFips, "state": defaults.stateFips};
 
 module.exports = {
+  initZip: function() {
+    this.zpbTotals(currZip, "annual_payroll", defaults.year);
+    this.zpbTotals(currZip, "q1_payroll", defaults.year);
+    this.zpbTotals(currZip, "employees", defaults.year);
+    this.zpbTotals(currZip, "establishments", defaults.year);
 
-  initAdmin: function(user){
-
-    this.zpbTotals("annual_payroll", defaults.zip, defaults.year);
-    this.zpbTotals("q1_payroll", defaults.zip, defaults.year);
-    this.zpbTotals("employees", defaults.zip, defaults.year);
-    this.zpbTotals("establishments", defaults.zip, defaults.year);
-
-    this.zbpDetails(defaults.zip, defaults.year, defaults.naics); //as optional params
-    this.zbpGeo(defaults.zip);
+    this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
+    this.zbpGeo(currZip);
     this.zipList();
     this.naicsList();
-
     ServerActionCreators.setAppSection('admin');
     
     this.read('user');
-    
-  
   },
-  initCmpgn: function(user,campaign){
+  initFips: function(type) {
+    if(type != "metro" && type != "county" && type != "state") {
+      console.error("Incorrect type of fips in initFips: ", type);
+    }
+    else {
+      this.zpbTotals({"type": type, "code": currFips[type]}, "annual_payroll", defaults.year);
+      this.zpbTotals({"type": type, "code": currFips[type]}, "q1_payroll", defaults.year);
+      this.zpbTotals({"type": type, "code": currFips[type]}, "employees", defaults.year);
+      this.zpbTotals({"type": type, "code": currFips[type]}, "establishments", defaults.year);
 
-    ServerActionCreators.setAppSection('cmpgn');
-    ServerActionCreators.setSessionUser(user);
-    ServerActionCreators.setSessionCampaign(campaign);
-    
-    this.read('user');
-    this.recieveVoters(campaign.id)
-  
+      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currNaics);
+      this.zbpGeo({"type": type, "code": currFips[type]});
+    }
   },
 
   //---------------------------------------------------
@@ -97,88 +96,112 @@ module.exports = {
   updateZip: function(zip) {
     //console.log("Updating zip with new zip", zip);
     //add error checking of zip later?
-    currZip = zip;
-    currFipsCode = null;
-    currFipsType = null;
-    this.zpbTotals("annual_payroll", currZip, defaults.year);
-    this.zpbTotals("q1_payroll", currZip, defaults.year);
-    this.zpbTotals("employees", currZip, defaults.year);
-    this.zpbTotals("establishments", currZip, defaults.year);
+    if(!Array.isArray(zip)){
+      console.error("Non array passed to update Zip!");
+    }
+    else {
+      currZip = zip;
+      this.zpbTotals(currZip, "annual_payroll", defaults.year);
+      this.zpbTotals(currZip, "q1_payroll", defaults.year);
+      this.zpbTotals(currZip, "employees", defaults.year);
+      this.zpbTotals(currZip, "establishments", defaults.year);
 
-    this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
+      this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
+      this.zbpGeo(currZip);
+    }
   },
 
   updateNaics: function(naics) {
-    currNaics = naics;
-    if(typeof currNaics == "string") {
-      currNaics = currNaics.split(",")
-    }
     
-    if(!(currNaics instanceof Array)) { //no definite way to do this, bc js sucks
-      currNaics = [currNaics];
+    if(typeof naics == "string") {
+      naics = naics.split(",")
     }
-    //console.log("Updatin naics:", currNaics);
+    else if(!Array.isArray(naics)) { //no definite way to do this, bc js sucks
+      console.error("Non array passed to updateNaics", naics);
+    }
+    currNaics = naics;
     this.zbpDetails(currZip, defaults.year, currNaics);
   },
 
   updateFips: function(type, code) {
-    currZip = null;
-    currFipsCode = code;
-    currFipsType = type;
+    if(type != "metro" && type != "county" && type != "state") {
+      console.error("Incorrect type of fips in updateFips: ", type);
+    }
+    else if(typeof type != "string" || typeof code != "string"){
+      console.error("Incorrect type or code provided to updateFips: ", type, code);
+    }
+    else {
+      currFips[type] = code;
+      this.zpbTotals({"type": type, "code": code}, "annual_payroll", defaults.year);
+      this.zpbTotals({"type": type, "code": code}, "q1_payroll", defaults.year);
+      this.zpbTotals({"type": type, "code": code}, "employees", defaults.year);
+      this.zpbTotals({"type": type, "code": code}, "establishments", defaults.year);
 
-  }
+      this.zbpDetails({"type": type, "code": code}, defaults.year, currNaics);
+      this.zbpGeo({"type": type, "code": code});
+    }
+  },
 
   //---------------------------------------------------
   // Voters
   //---------------------------------------------------
   zpbTotals: function(codes, type, year){ //Should be only one zip!
     var yearPath = year || '';
-    if(Array.isArray(codes)) { // if zips
-      
-      var zipPost = {'zips':codes}
-      this.zbpGeo(zips);
-      io.socket.post('/totals/'+type+'/'+yearPath, zipPost, function(resData){
-        ServerActionCreators.receiveTotals(type,resData, codes[0]);
-      });
+    var post = {};
+    if(Array.isArray(codes)) { 
+      post = {'zips':codes};
+      //this.zbpGeo(codes); 
+    }
+    else if(codes.constructor.toString().indexOf("Object") != -1) {
+      post = {'fips': codes};
     }
     else {
-      var fipsPost = {'fips': fips};
-
+      console.log("Invalid codes passed to zbpTotals: ", codes)
     }
+    io.socket.post('/totals/'+type+'/'+yearPath, post, function(resData){
+      ServerActionCreators.receiveTotals(type,resData, codes);
+    });
   },
   //both year and zip should be passed as arrays?!?! maybe
   zbpDetails: function(codes, year, naics) {
-
+    var post = {};
     var yearPath = year || '';
     if(Array.isArray(codes)) {
-      var post = {'zips':zips, 'naics':naics};
-
-      io.socket.post('/details/' + yearPath, post, function(resData) {
-        ServerActionCreators.receiveDetails(resData, zips, naics);
-      });
+      post = {'zips':codes, 'naics':naics};
+    }
+    else if(codes.constructor.toString().indexOf("Object") != -1) {
+      post = {'fips': codes};
     }
     else {
-      
+      console.log("Invalid codes passed to zbpDetails: ", codes)
     }
-  },
-  zipList: function() {
-    io.socket.get('/zipcodes',function(resData){
-      ServerActionCreators.receiveZipList(resData);
+    io.socket.post('/details/' + yearPath, post, function(resData) {
+      ServerActionCreators.receiveDetails(resData, codes, naics);
     });
   },
-  zbpGeo: function(codes) { //could be zips or fips
-    if(Array.isArray(codes)) { //zips
-      var zipPost = {'zips':zips};
-      io.socket.post('/geozipcodes', zipPost, function(resData) {
-        ServerActionCreators.receiveGeoJSON(resData);
-      });
+  zbpGeo: function(codes) { 
+    if(Array.isArray(codes)) { 
+      var zipPost = {'zips':codes};
     }
-
+    else if(codes.constructor.toString().indexOf("Object") != -1) {
+      var fipsPost = {'fips': codes};
+    }
+    else {
+      console.log("Invalid codes passed to zbpGeo: ", codes)
+    }
+    io.socket.post('/geozipcodes', zipPost, function(resData) {
+      ServerActionCreators.receiveGeoJSON(resData);
+    });
   },
   naicsList: function() {    
     io.socket.get('/naics', function(resData) {
       ServerActionCreators.receiveNaicsList(resData);
     });       
+  },
+  zipList: function() {
+    io.socket.get('/zipcodes',function(resData){
+      ServerActionCreators.receiveZipList(resData);
+    });
   }
 
 };

@@ -22,7 +22,6 @@ var jwt = new googleapis.auth.JWT(
 	'3d161a58ac3237c1a1f24fbdf6323385213f6afc', 
 	['https://www.googleapis.com/auth/bigquery']
 );
-var fipsToName = require('../../assets/fips/fips-to-full-name-abbreviation.js');
 jwt.authorize();
 var bigQuery = googleapis.bigquery('v2');
 var simplifyForDetails = function(response) {
@@ -435,9 +434,6 @@ module.exports = {
 	zipcode_geo : function(req,res){
 		//add error checking iff the zips array isn't actually an array
 		var sql = '';
-		if(!req.param('zips')) {
-			res.json({status:500, responseText:'Error, must pass array of zip codes.'})
-		}
 		if(!req.param('fips') && !req.param('zips')) {
 			res.json({status:500,responseText:'Error, must pass zips or fips codes'});
 		}
@@ -452,7 +448,7 @@ module.exports = {
 			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
 				res.json({status:500,responseText:'Error, type and code must be Strings.'});
 			}
-			else if(!validType(type)) {
+			else if(!validType(fips.type)) {
 				res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
 			}
 			else {
@@ -488,6 +484,7 @@ module.exports = {
 		}
 		Geocensus.query(sql,function(err,data){
 			if(err) console.log('Error in geocensus', err);
+			//console.log("Geo data", data);
 			var geoJSON = {};
 			geoJSON.type = "FeatureCollection";
 			geoJSON.features = [];
