@@ -65,17 +65,19 @@ module.exports = {
       naics: data
     });
   },
-  receiveTotals: function(varName, data) {
+  receiveTotals: function(varName, data, codes) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,
       variable: varName,
+      codes: codes,
       totals: data
     });
   },
-  receiveDetails: function(data, naics) {
+  receiveDetails: function(data, codes, naics) {
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_DETAILS,
       details: data,
+      codes: codes,
       naics: naics
     });
   },

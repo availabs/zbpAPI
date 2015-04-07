@@ -34,7 +34,7 @@ var drawTotalGraph = function(variable, totals, zip) {
                 .axisLabelDistance(-5);
 
             d3.select('#' + variable)
-                .datum(zip ? parseTotalData(totals, zip) : parseTotalData(totals))
+                .datum(zip ? parseTotalData(totals, zip) : parseTotalData(totals, false))
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -73,6 +73,7 @@ var parseTotalData = function(data, zip) {
         }
     */
     if(zip) {
+        console.log("Totals zips")
         if(typeof data[Object.keys(data)[0]] == "object") { //If we have more than one year. Should always be the case.
             //console.log("Total's zip", zip, "for data", data);
 
@@ -95,6 +96,7 @@ var parseTotalData = function(data, zip) {
         }
     }
     else {
+        console.log("Totals fips");
         for(var yr in data) {
             var sum = 0;
             for(var z in data) {
@@ -137,7 +139,7 @@ var Graph = React.createClass({
             }
         }
         else {
-            drawTotalGraph(this.props.variable, this.props.totalData);
+            drawTotalGraph(this.props.variable, this.props.totalData, false);
         }
         return (
         	<div>

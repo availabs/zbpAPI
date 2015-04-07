@@ -24,6 +24,7 @@ var currZip = defaults.zip,
 
 module.exports = {
   initZip: function() {
+    console.log("\n\n\ninitZip called\n\n\n");
     this.zpbTotals(currZip, "annual_payroll", defaults.year);
     this.zpbTotals(currZip, "q1_payroll", defaults.year);
     this.zpbTotals(currZip, "employees", defaults.year);
@@ -38,6 +39,7 @@ module.exports = {
     this.read('user');
   },
   initFips: function(type) {
+    console.log("\n\n\ninitFips called\n\n\n");
     if(type != "metro" && type != "county" && type != "state") {
       console.error("Incorrect type of fips in initFips: ", type);
     }
@@ -49,6 +51,7 @@ module.exports = {
 
       this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currNaics);
       this.zbpGeo({"type": type, "code": currFips[type]});
+      this.naicsList();
     }
   },
 
@@ -148,6 +151,7 @@ module.exports = {
   zpbTotals: function(codes, type, year){ //Should be only one zip!
     var yearPath = year || '';
     var post = {};
+    console.log("zbpTotals called with ", codes, type, year)
     if(Array.isArray(codes)) { 
       post = {'zips':codes};
       //this.zbpGeo(codes); 
@@ -166,6 +170,7 @@ module.exports = {
   zbpDetails: function(codes, year, naics) {
     var post = {};
     var yearPath = year || '';
+    console.log("zbpDetails called with ", codes, year, naics)
     if(Array.isArray(codes)) {
       post = {'zips':codes, 'naics':naics};
     }
@@ -181,6 +186,7 @@ module.exports = {
   },
   zbpGeo: function(codes) { 
     if(Array.isArray(codes)) { 
+      console.log("zbpGeo called with codes", codes);
       var zipPost = {'zips':codes};
     }
     else if(codes.constructor.toString().indexOf("Object") != -1) {

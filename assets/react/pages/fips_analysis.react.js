@@ -3,6 +3,8 @@ var React = require('react'),
     //--Stores
     ZBPStore = require('../stores/ZBPStore'),
 
+    ClientActionsCreator = require('../actions/ClientActionsCreator'),
+
     //-- Components
     TotalsGraph  = require('../components/graphs/TotalsGraph.react'),
     DetailsGraph  = require('../components/graphs/DetailsGraph.react'),
@@ -63,7 +65,11 @@ var FipsAnalysis = React.createClass({
         };
     },
     componentDidMount: function() {
+        ClientActionsCreator.initFips(this.state.type);
         ZBPStore.addChangeListener(this._onChange);
+    },
+    componentWillUnmount: function() {
+        ZBPStore.removeChangeListener(this._onChange);
     },
     _onChange: function() {
         this.setState({
@@ -80,6 +86,7 @@ var FipsAnalysis = React.createClass({
         });
     },
     render: function() {
+        console.log("fips analysis state", this.state);
         return (
             <div>
                 <div className="row"> {/*Fips Search*/}

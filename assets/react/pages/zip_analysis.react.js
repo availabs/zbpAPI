@@ -3,6 +3,8 @@ var React = require('react'),
     //--Stores
     ZBPStore = require('../stores/ZBPStore'),
 
+    ClientActionsCreator = require('../actions/ClientActionsCreator'),
+
     //-- Components
     TotalsGraph  = require('../components/graphs/TotalsGraph.react'),
     DetailsGraph  = require('../components/graphs/DetailsGraph.react'),
@@ -55,6 +57,7 @@ var ZipAnalysis = React.createClass({
                
     },
     componentDidMount: function() {
+        ClientActionsCreator.initZip();
         ZBPStore.addChangeListener(this._onChange);
     },
 
