@@ -13,6 +13,7 @@ var defaults = {
   zip: ["10001"],
   year: "",
   naics: [""],
+  fipsNaics: ["62----"], //this is b/c can't query empty naics with fips
   metroFips: "63217",
   countyFips: "36061",
   stateFips: "36"
@@ -20,11 +21,19 @@ var defaults = {
 
 var currZip = defaults.zip,
     currNaics = defaults.naics,
+    currFipsNaics = defaults.fipsNaics,
     currFips = {"metro": defaults.metroFips, "county": defaults.countyFips, "state": defaults.stateFips};
 
 module.exports = {
+  init: function() {
+    ServerActionCreators.setAppSection('admin');
+    this.read('user');
+    this.zipList();
+    this.naicsList();
+  },
   initZip: function() {
     console.log("\n\n\ninitZip called\n\n\n");
+    currNaics = defaults.naics;
     this.zpbTotals(currZip, "annual_payroll", defaults.year);
     this.zpbTotals(currZip, "q1_payroll", defaults.year);
     this.zpbTotals(currZip, "employees", defaults.year);
@@ -32,11 +41,6 @@ module.exports = {
 
     this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
     this.zbpGeo(currZip);
-    this.zipList();
-    this.naicsList();
-    ServerActionCreators.setAppSection('admin');
-    
-    this.read('user');
   },
   initFips: function(type) {
     console.log("\n\n\ninitFips called\n\n\n");
@@ -49,9 +53,8 @@ module.exports = {
       this.zpbTotals({"type": type, "code": currFips[type]}, "employees", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "establishments", defaults.year);
 
-      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currNaics);
+      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
       this.zbpGeo({"type": type, "code": currFips[type]});
-      this.naicsList();
     }
   },
 
@@ -175,7 +178,7 @@ module.exports = {
       post = {'zips':codes, 'naics':naics};
     }
     else if(codes.constructor.toString().indexOf("Object") != -1) {
-      post = {'fips': codes};
+      post = {'fips': codes, 'naics': naics};
     }
     else {
       console.log("Invalid codes passed to zbpDetails: ", codes)
@@ -185,17 +188,19 @@ module.exports = {
     });
   },
   zbpGeo: function(codes) { 
+    console.log("zbpGeo called with codes");
+    console.log(codes);
+    var post = {};
     if(Array.isArray(codes)) { 
-      console.log("zbpGeo called with codes", codes);
-      var zipPost = {'zips':codes};
+      post = {'zips':codes};
     }
     else if(codes.constructor.toString().indexOf("Object") != -1) {
-      var fipsPost = {'fips': codes};
+      post = {'fips': codes};
     }
     else {
       console.log("Invalid codes passed to zbpGeo: ", codes)
     }
-    io.socket.post('/geozipcodes', zipPost, function(resData) {
+    io.socket.post('/geozipcodes', post, function(resData) {
       ServerActionCreators.receiveGeoJSON(resData);
     });
   },

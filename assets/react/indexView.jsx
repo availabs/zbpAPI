@@ -24,7 +24,7 @@ var React = require('react'),
     sailsWebApi = require('./utils/api/SailsWebApi.js');
 
 // --- Initialize the API with the session User  
-sailsWebApi.initZip();
+sailsWebApi.init();
 
 //  --- Routes 
 var routes = (

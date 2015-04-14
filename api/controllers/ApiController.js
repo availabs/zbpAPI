@@ -190,7 +190,7 @@ module.exports = {
 				auth: jwt
 			},
 			function(err, response) {
-				if (err) console.log('Error:',err);
+				if (err) console.log('Error in naics_list:',err);
 
 				res.json({data:simplifyList(response)})
 		});
@@ -280,7 +280,7 @@ module.exports = {
 							auth: jwt
 						},
 						function(err, response) {
-							if (err) console.log('Error:',err);
+							if (err) console.log('Error in totals fips:',err);
 							
 							res.json({data:simplifyForTotals(response)})
 						});
@@ -311,7 +311,7 @@ module.exports = {
 				auth: jwt
 			},
 			function(err, response) {
-				if (err) console.log('Error:',err);
+				if (err) console.log('Error in totals zips:',err);
 			
 				res.json({data:simplifyForTotals(response)})
 			});
@@ -321,7 +321,7 @@ module.exports = {
 	details : function(req,res){
 		var sql = '';
 		var codes = null;
-		if(!req.param('naics') || !Array.isArray(req.param('naics'))) {
+		if(!req.param('naics') || req.param('naics').length == 0 || !Array.isArray(req.param('naics'))) {
 			res.json({status:500,responseText:'Error, must pass array of naics codes'});
 		}
 		if(!req.param('fips') && !req.param('zips')) {
@@ -338,6 +338,9 @@ module.exports = {
 			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
 				res.json({status:500,responseText:'Error, type and code must be Strings.'});
 			}
+			else if(req.param('naics').indexOf('') == -1 || req.param('naics').indexOf(' ') == -1) {
+				res.json({status:500,responseText:'Error, cannot pass empty naics codes with fips'})
+			}
 			else {
 				var fipsCode = fips.code, type = fips.type;
 				if(!validType(type)) {
@@ -353,25 +356,23 @@ module.exports = {
 						codes = JSON.stringify(codes).replace('[', '').replace(']', '');
 
 						var naics = req.param('naics');
-						var naicsString = function() {
-							var toRet = 'and (naics like "' + naics[0] + '%" ';
-							for(var i=1; i<naics.length; i++) {
-								toRet += 'or naics like "' + naics[i] + '%" ';
-							}
-							toRet += ") ";
-							return toRet;
+						var naicsString = 'and (naics like "' + naics[0] + '%" ';
+						for(var i=1; i<naics.length; i++) {
+							naicsString += 'or naics like "' + naics[i] + '%" ';
 						}
+						naicsString += ") ";
+						console.log('details fips naics', naics);
 						if(req.param('year')) {
 							var year = req.param('year');
 							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
 								res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
 							}
-							sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString() + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+							sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 						}
 						else { //if the user wants the summed data
-							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString() + ' group by year, zip, naics order by year, zip';
+							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 						}
-
+						console.log(sql);
 						var request = bigQuery.jobs.query({
 								kind: 'bigquery#queryRequest',
 								projectId: 'avail-wim',
@@ -380,7 +381,7 @@ module.exports = {
 								auth: jwt
 							},
 							function(err, response) {
-								if (err) console.log('Error:',err);
+								if (err) console.log('Error getting fips details:',err);
 								res.json({data:simplifyForDetails(response)})
 								//res.json({data:response})
 							});
@@ -391,25 +392,23 @@ module.exports = {
 		else if(req.param('zips')) {
 			codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']', '');					
 			var naics = req.param('naics');
-			var naicsString = function() {
-				var toRet = 'and (naics like "' + naics[0] + '%" ';
-				for(var i=1; i<naics.length; i++) {
-					toRet += 'or naics like "' + naics[i] + '%" ';
-				}
-				toRet += ") ";
-				return toRet;
+			var naicsString ='and (naics like "' + naics[0] + '%" ';
+			for(var i=1; i<naics.length; i++) {
+				naicsString += 'or naics like "' + naics[i] + '%" ';
 			}
-			if(req.param('year')) {
+			naicsString += ") ";
+			console.log("details zips naics", naics);
+			if(req.param('year')) {	
 				var year = req.param('year');
 				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
 					res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
 				}
-				sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString() + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+				sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 			}
 			else { //if the user wants the summed data
-				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString() + ' group by year, zip, naics order by year, zip';
+				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 			}
-
+			console.log(sql);
 			var request = bigQuery.jobs.query({
 					kind: 'bigquery#queryRequest',
 					projectId: 'avail-wim',
@@ -418,7 +417,7 @@ module.exports = {
 					auth: jwt
 				},
 				function(err, response) {
-					if (err) console.log('Error in details query:',err);
+					if (err) console.log('Error in zip details query:',err);
 					res.json({data:simplifyForDetails(response)})
 					//res.json({data:response})
 				});
@@ -434,6 +433,7 @@ module.exports = {
 	zipcode_geo : function(req,res){
 		//add error checking iff the zips array isn't actually an array
 		var sql = '';
+
 		if(!req.param('fips') && !req.param('zips')) {
 			res.json({status:500,responseText:'Error, must pass zips or fips codes'});
 		}
@@ -442,6 +442,7 @@ module.exports = {
 		}
 		else if(req.param('fips')) {
 			var fips = req.param('fips');
+			console.log("zipcode_geo called with fips ", fips);
 			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
 				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
 			}
@@ -477,7 +478,7 @@ module.exports = {
 			// FROM tl_2013_us_uac10 as ua ,tl_2013_us_zcta510 as zip
 			// where ST_Overlaps(ua.geom, zip.geom) and ua.name10 like '%NY%' 
 			// group by  ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom)";
-			
+			console.log('zipcode_geo called with zips ', zips);
 			sql = "Select ST_ASGeoJSON(geom) as geom,geoid10 from tl_2013_us_zcta510 where geoid10 in (" + zips + ")";
 			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
 			
