@@ -226,7 +226,7 @@ module.exports = {
 					return 'est'; break;
 			}
 		}
-		var codes = null;
+		var codes = [];
 		if(!req.param('variable_name')) {
 			res.json({status:500,responseText:'Error, must pass variable name, see documentation.'});
 		}
@@ -255,10 +255,13 @@ module.exports = {
 				}
 				else {
 					Geocensus.query(getFipsQuery(type, fipsCode),function(err, response){
-						if(err) console.log('Error:Getting Fips Zip Code List for ' + type +'' ,err);
+						if(err) console.log('Error:Getting Fips Zip Code List for ' + type +'' ,err); 
 						codes = response.rows.map(function(row) {
 								return row.geoid10;
 							}); //b/c async sucks but also doesn't suck
+						if(codes == []) {
+							res.json({data:null});
+						}
 						codes = JSON.stringify(codes).replace('[', '').replace(']', '');
 						var sql = '';
 						var varName = fixVarName(req.param('variable_name'));
@@ -267,11 +270,12 @@ module.exports = {
 							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
 								res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
 							}
-							sql = 'select zip, ' + varName + ' from zbp.zbp_totals where zip in (' + codes + ') and year = ' + year + ' group by zip, emp, ' + varName + ' order by zip';
+							sql = 'select zip, ' + varName + ' from zbp.zbp_totals where zip in (' + codes + ') and year = "' + year + '" group by zip, emp, ' + varName + ' order by zip';
 						}
 						else { //TODO: TYPE SAFETY. 
 							sql = 'select year, zip, sum(' + varName + ') from zbp.zbp_totals where zip in (' + codes + ') group by year, zip, ' + varName + ' order by year, zip';	
 						}
+						console.log(sql);
 						var request = bigQuery.jobs.query({
 							kind: 'bigquery#queryRequest',
 							projectId: 'avail-wim',
@@ -483,6 +487,7 @@ module.exports = {
 			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
 			
 		}
+		console.log(sql);
 		Geocensus.query(sql,function(err,data){
 			if(err) console.log('Error in geocensus', err);
 			//console.log("Geo data", data);

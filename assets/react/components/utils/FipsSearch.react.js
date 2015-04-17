@@ -20,8 +20,8 @@ var FipsSearch = React.createClass({
 
 	_newFips:function(e){
 		if(this.state.type == 'state') {
-			if(this.currentFips.length == 2) {
-				ClientActionsCreator.setCurrentFips(this.state.currentFips);
+			if(this.state.currentFips && this.state.currentFips.length == 2) {
+				ClientActionsCreator.setCurrentFips(this.state.type, this.state.currentFips);
 			}
 			else {
 				swal({
@@ -34,8 +34,8 @@ var FipsSearch = React.createClass({
 			}
 		}
 		else {
-			if(this.currentFips.length == 5) {
-				ClientActionsCreator.setCurrentFips(this.state.currentFips);
+			if(this.state.currentFips && this.state.currentFips.length == 5) {
+				ClientActionsCreator.setCurrentFips(this.state.type, this.state.currentFips);
 			}
 			else {
 				swal({

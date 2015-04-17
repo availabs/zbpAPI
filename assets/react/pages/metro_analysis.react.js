@@ -22,9 +22,9 @@ var MetroAnalysis = React.createClass({
 		ZBPStore.addChangeListener(this._onChange);
 	},
 	_onChange: function() {
-		this.setState({
+		/*this.setState({
 			code: ZBPStore.getFips("metro")
-		});
+		});*/
 	},
 	render: function() {
 		return (

@@ -151,7 +151,7 @@ module.exports = {
   //---------------------------------------------------
   // Voters
   //---------------------------------------------------
-  zpbTotals: function(codes, type, year){ //Should be only one zip!
+  zpbTotals: function(codes, type, year){ //type is the variable name!
     var yearPath = year || '';
     var post = {};
     console.log("zbpTotals called with ", codes, type, year)

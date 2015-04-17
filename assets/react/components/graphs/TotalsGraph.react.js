@@ -6,7 +6,7 @@ var d3 = require('../../../../node_modules/d3/d3');
 
 
 var drawTotalGraph = function(variable, totals, zip) {
-    if(Object.keys(totals).length == 0) { 
+    if(totals == null || Object.keys(totals).length == 0) { 
         //console.log("Empty totals data", totals, "with variable ", variable)
         return "";
     }
@@ -130,6 +130,7 @@ var Graph = React.createClass({
                 //console.log("zip is array!")
                 this.props.zip = this.props.zip[0];
             }
+            //REWRITE THIS IF
             if(this.props.variable && Object.keys(this.props.totalData).length > 0 && this.props.zip && Object.keys(this.props.totalData["2000"])[0] == this.props.zip){
                 drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
                 //console.log("curr data for ", this.props.variable, " ", this.props.totalData)
