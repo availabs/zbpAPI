@@ -25,10 +25,13 @@ var jwt = new googleapis.auth.JWT(
 jwt.authorize();
 var bigQuery = googleapis.bigquery('v2');
 var simplifyForDetails = function(response) {
+	if(response == null) {
+		return {code:400, responseText:"Error in retrieving your query."}
+	}
 	var sizes = ["total", "1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"];
 	var toReturn = {},
 		fields = response.schema.fields;
-	//console.log(response)
+
 	for(var row in response.rows) {
 		var rowVals = response.rows[row].f;
 
@@ -71,6 +74,9 @@ var simplifyForDetails = function(response) {
 };
 
 var simplifyForTotals = function(response) {
+	if(response == null) {
+		return {code:400, responseText:"Error in retrieving your query."}
+	}
 	var toReturn = {},
 		fields = response.schema.fields;
 
@@ -134,7 +140,7 @@ module.exports = {
 				auth: jwt
 			},
 			function(err, response) {
-				if (err) console.log('Error in zipcode_list with all zips:',err);
+				if (err) res.json(err);
 
 				res.json({data:simplifyList(response)})
 			});
@@ -154,7 +160,7 @@ module.exports = {
 			}
 			else {
 				Geocensus.query(getFipsQuery(type, fips),function(err, response){
-					if(err) console.log('Error:Getting Fips Zip Code List for ' + type +'' ,err);
+					if(err) res.json(err);
 					var data = response.rows.map(function(row) {
 							return row.geoid10;
 						});
@@ -190,7 +196,7 @@ module.exports = {
 				auth: jwt
 			},
 			function(err, response) {
-				if (err) console.log('Error in naics_list:',err);
+				if (err) res.json(err);
 
 				res.json({data:simplifyList(response)})
 		});
@@ -255,7 +261,7 @@ module.exports = {
 				}
 				else {
 					Geocensus.query(getFipsQuery(type, fipsCode),function(err, response){
-						if(err) console.log('Error:Getting Fips Zip Code List for ' + type +'' ,err); 
+						if(err) res.json(err);
 						codes = response.rows.map(function(row) {
 								return row.geoid10;
 							}); //b/c async sucks but also doesn't suck
@@ -275,7 +281,7 @@ module.exports = {
 						else { //TODO: TYPE SAFETY. 
 							sql = 'select year, zip, sum(' + varName + ') from zbp.zbp_totals where zip in (' + codes + ') group by year, zip, ' + varName + ' order by year, zip';	
 						}
-						console.log(sql);
+						
 						var request = bigQuery.jobs.query({
 							kind: 'bigquery#queryRequest',
 							projectId: 'avail-wim',
@@ -284,7 +290,7 @@ module.exports = {
 							auth: jwt
 						},
 						function(err, response) {
-							if (err) console.log('Error in totals fips:',err);
+							if (err) res.json(err);
 							
 							res.json({data:simplifyForTotals(response)})
 						});
@@ -315,7 +321,7 @@ module.exports = {
 				auth: jwt
 			},
 			function(err, response) {
-				if (err) console.log('Error in totals zips:',err);
+				if (err) res.json(err);
 			
 				res.json({data:simplifyForTotals(response)})
 			});
@@ -342,7 +348,7 @@ module.exports = {
 			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
 				res.json({status:500,responseText:'Error, type and code must be Strings.'});
 			}
-			else if(req.param('naics').indexOf('') == -1 || req.param('naics').indexOf(' ') == -1) {
+			else if(req.param('naics').indexOf('') != -1 || req.param('naics').indexOf(' ') != -1) {
 				res.json({status:500,responseText:'Error, cannot pass empty naics codes with fips'})
 			}
 			else {
@@ -352,7 +358,7 @@ module.exports = {
 				}
 				else {
 					Geocensus.query(getFipsQuery(type, fipsCode),function(err, response){
-						if(err) console.log('Error:Getting Fips Zip Code List for ' + type +'' ,err);
+						if(err) res.json(err);
 						//return response;
 						codes = response.rows.map(function(row) {
 								return row.geoid10;
@@ -365,7 +371,7 @@ module.exports = {
 							naicsString += 'or naics like "' + naics[i] + '%" ';
 						}
 						naicsString += ") ";
-						console.log('details fips naics', naics);
+
 						if(req.param('year')) {
 							var year = req.param('year');
 							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
@@ -376,7 +382,7 @@ module.exports = {
 						else { //if the user wants the summed data
 							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 						}
-						console.log(sql);
+						
 						var request = bigQuery.jobs.query({
 								kind: 'bigquery#queryRequest',
 								projectId: 'avail-wim',
@@ -385,7 +391,7 @@ module.exports = {
 								auth: jwt
 							},
 							function(err, response) {
-								if (err) console.log('Error getting fips details:',err);
+								if (err) res.json(err);
 								res.json({data:simplifyForDetails(response)})
 								//res.json({data:response})
 							});
@@ -401,7 +407,6 @@ module.exports = {
 				naicsString += 'or naics like "' + naics[i] + '%" ';
 			}
 			naicsString += ") ";
-			console.log("details zips naics", naics);
 			if(req.param('year')) {	
 				var year = req.param('year');
 				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
@@ -412,7 +417,7 @@ module.exports = {
 			else { //if the user wants the summed data
 				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 			}
-			console.log(sql);
+			
 			var request = bigQuery.jobs.query({
 					kind: 'bigquery#queryRequest',
 					projectId: 'avail-wim',
@@ -421,7 +426,7 @@ module.exports = {
 					auth: jwt
 				},
 				function(err, response) {
-					if (err) console.log('Error in zip details query:',err);
+					if (err) res.json(err);
 					res.json({data:simplifyForDetails(response)})
 					//res.json({data:response})
 				});
@@ -446,7 +451,7 @@ module.exports = {
 		}
 		else if(req.param('fips')) {
 			var fips = req.param('fips');
-			console.log("zipcode_geo called with fips ", fips);
+
 			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
 				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
 			}
@@ -482,15 +487,14 @@ module.exports = {
 			// FROM tl_2013_us_uac10 as ua ,tl_2013_us_zcta510 as zip
 			// where ST_Overlaps(ua.geom, zip.geom) and ua.name10 like '%NY%' 
 			// group by  ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom)";
-			console.log('zipcode_geo called with zips ', zips);
 			sql = "Select ST_ASGeoJSON(geom) as geom,geoid10 from tl_2013_us_zcta510 where geoid10 in (" + zips + ")";
 			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
 			
 		}
-		console.log(sql);
+		
 		Geocensus.query(sql,function(err,data){
-			if(err) console.log('Error in geocensus', err);
-			//console.log("Geo data", data);
+			if(err) res.json(err);
+
 			var geoJSON = {};
 			geoJSON.type = "FeatureCollection";
 			geoJSON.features = [];

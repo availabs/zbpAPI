@@ -28,9 +28,9 @@ var _zipcodeList = [],
     _chosenVariable = "annual_payroll",
     _geoJSON = {},
     _fips = {
-      "metro": "",
-      "county": "",
-      "state": ""
+      "metro": "63217",
+      "county": "36061",
+      "state": "36"
     };
 
 function _addUsers(rawData) {

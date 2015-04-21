@@ -63,7 +63,8 @@ var Map = React.createClass({
         map.addLayer(layers[key].layer);
         if(layer.options.zoomOnLoad && layer.geo.features.length > 0){
             var ezBounds = d3.geo.bounds(layer.geo);
-            map.fitBounds([ezBounds[0].reverse(),ezBounds[1].reverse()]);
+            
+            map.fitBounds(layers[key].layer.getBounds());
         }
     },
 
@@ -97,11 +98,12 @@ var Map = React.createClass({
             layers[key] =  {
                 id:currLayer.id,
                 layer: L.geoJson(currLayer.geo,currLayer.options)
-            };  
+            };
+
             map.addLayer(layers[key].layer);
             if(currLayer.options.zoomOnLoad && currLayer.geo.features.length > 0){
                 var ezBounds = d3.geo.bounds(currLayer.geo);
-                map.fitBounds([ezBounds[0].reverse(),ezBounds[1].reverse()]);
+                map.fitBounds(layers[key].layer.getBounds());
             }
         
         });

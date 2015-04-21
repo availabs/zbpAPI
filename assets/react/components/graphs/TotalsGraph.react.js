@@ -73,7 +73,7 @@ var parseTotalData = function(data, zip) {
         }
     */
     if(zip) {
-        console.log("Totals zips")
+        //console.log("Totals zips", data);
         if(typeof data[Object.keys(data)[0]] == "object") { //If we have more than one year. Should always be the case.
             //console.log("Total's zip", zip, "for data", data);
 
@@ -92,14 +92,14 @@ var parseTotalData = function(data, zip) {
 
         }
         else { //shouldn't happen w/ line chart demo.
-            console.log("Data != object! or something.");
+            //console.log("Data != object! or something.");
         }
     }
     else {
-        console.log("Totals fips");
+        //console.log("Totals fips", data);
         for(var yr in data) {
             var sum = 0;
-            for(var z in data) {
+            for(var z in data[yr]) {
                 if(data[yr][z] != 0 && !data[yr][z]) {
                     return "";
                 }

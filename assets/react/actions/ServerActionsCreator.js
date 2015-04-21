@@ -74,6 +74,7 @@ module.exports = {
     });
   },
   receiveDetails: function(data, codes, naics) {
+    console.log("Receiving details", data, codes, naics);
     AppDispatcher.handleServerAction({
       type:ActionTypes.RECEIVE_DETAILS,
       details: data,

@@ -18,9 +18,15 @@ var MetroAnalysis = React.createClass({
 			code: ZBPStore.getFips("metro")
 		};
 	},
+	
 	componentDidMount: function(){
 		ZBPStore.addChangeListener(this._onChange);
 	},
+
+	componentWillUnmount: function(){
+		ZBPStore.removeChangeListener(this._onChange);
+	},
+
 	_onChange: function() {
 		/*this.setState({
 			code: ZBPStore.getFips("metro")

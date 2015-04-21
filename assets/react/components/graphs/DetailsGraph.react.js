@@ -6,11 +6,10 @@ var d3 = require('../../../../node_modules/d3/d3');
 var drawDetailGraph = function(details, zip) {
     //console.log("Data received", details);
     if(details == {} || !details) {
-        console.log("drawDetailGraph received empty data");
+        //console.log("drawDetailGraph received empty data");
         return "";
     }
     else {
-        console.log("Details data: ", details);
         nv.addGraph(function() {
             /*var chart = nv.models.multiBarChart()
                 .margin({left:100})
@@ -70,9 +69,8 @@ var parseDetailData = function(data, zip) {
         sizes = ["Establishments with 1 to 4 employees","Establishments with 5 to 9 employees","Establishments with 10 to 19 employees","Establishments with 20 to 49 employees","Establishments with 50 to 99 employees","Establishments with 100 to 249 employees","Establishments with 250 to 499 employees","Establishments with 500 to 999 employees","Establishments with 1,000 employees or more"],
         sizesKeys = ["1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"],
         sizeVals = [avg2(1,4) , avg2(5, 9), avg2(10, 19), avg2(20, 49), avg2(50, 99), avg2(100, 249), avg2(250, 499), avg2(500, 999), 13700];
-    console.log("In parse", zip, data);
+
     if(zip) {
-        console.log("details zips ");
         var tempObj = {}; //temp object for easier data processing
         for(var yr in data) {
             if(data[yr][zip] != 0 && !data[yr][zip])
@@ -102,7 +100,6 @@ var parseDetailData = function(data, zip) {
         }
     }
     else { //if we're dealing with fips data.
-        console.log("details fips ");
         var tempObj = {};
         for(var yr in data) {
             if(!tempObj[yr])
@@ -162,7 +159,7 @@ var Graph = React.createClass({
                 this.props.zip = this.props.zip[0];
             }
             try { // b/c sometimes the data is derp.
-                if(this.props.zip && Object.keys(this.props.detailsData).length > 0 && Object.keys(this.props.detailsData[Object.keys(this.props.detailsData)[0]])[0] == this.props.zip) {
+                if(this.props.zip && (!this.props.detailsData instanceof Array && this.props.detailsData instanceof Object) && Object.keys(this.props.detailsData).length > 0 && Object.keys(this.props.detailsData[Object.keys(this.props.detailsData)[0]])[0] == this.props.zip) {
                     //This makes sure that the data has caught up to the new zip code.
                     //Issue: what if data for "1994" doesn't exist in this instance of detailsdata?
                     drawDetailGraph(this.props.detailsData, this.props.zip);
