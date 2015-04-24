@@ -1,0 +1,8 @@
+historical data for county bp: http://www.census.gov/econ/cbp/historical.htm 
+	(naics and sic by year)
+
+csv data dl: http://www.census.gov/econ/cbp/download/
+
+concordances (conversion tables): https://www.census.gov/eos/www/naics/concordances/concordances.html
+
+

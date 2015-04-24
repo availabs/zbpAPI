@@ -64,7 +64,7 @@ var sumArr = function(arr) {
 };
 
 var parseDetailData = function(data, zip) {
-    //console.log("data that parseDetail is getting", data);
+    console.log("data that parseDetail is getting", data);
     var vals = [],
         sizes = ["Establishments with 1 to 4 employees","Establishments with 5 to 9 employees","Establishments with 10 to 19 employees","Establishments with 20 to 49 employees","Establishments with 50 to 99 employees","Establishments with 100 to 249 employees","Establishments with 250 to 499 employees","Establishments with 500 to 999 employees","Establishments with 1,000 employees or more"],
         sizesKeys = ["1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"],
@@ -139,8 +139,10 @@ var parseDetailData = function(data, zip) {
             if(b.key == '----' || b.key == '------') return -1;
             return sumB-sumA;
         });
+        console.log("vals",vals.slice(0,10))
         return vals.slice(0, 10);
     }
+    console.log("vals", vals)
     return vals;
 };  
 
