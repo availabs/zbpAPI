@@ -34,12 +34,13 @@ module.exports = {
   initZip: function() {
     //console.log("\n\n\ninitZip called\n\n\n");
     currNaics = defaults.naics;
+    this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
+
     this.zpbTotals(currZip, "annual_payroll", defaults.year);
     this.zpbTotals(currZip, "q1_payroll", defaults.year);
     this.zpbTotals(currZip, "employees", defaults.year);
     this.zpbTotals(currZip, "establishments", defaults.year);
 
-    this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
     this.zbpGeo(currZip);
   },
   initFips: function(type) {
@@ -48,12 +49,13 @@ module.exports = {
       console.error("Incorrect type of fips in initFips: ", type);
     }
     else {
+      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
+
       this.zpbTotals({"type": type, "code": currFips[type]}, "annual_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "q1_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "employees", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "establishments", defaults.year);
 
-      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
       this.zbpGeo({"type": type, "code": currFips[type]});
     }
   },

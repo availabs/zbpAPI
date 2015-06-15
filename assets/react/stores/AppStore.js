@@ -43,7 +43,7 @@ var AppStore = assign({}, EventEmitter.prototype, {
   },
 
   getMenu: function() {
-    console.log('appstore.getmenu',_menus[_appSection])
+    // console.log('appstore.getmenu',_menus[_appSection])
     return _menus[_appSection];
   }
 

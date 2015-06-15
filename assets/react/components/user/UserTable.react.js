@@ -19,8 +19,8 @@ var UserRow = React.createClass({
         
             <tr onClick={this._onClick} className={this.props.classString} >
                 <td > 
-                    <i  className="eicon-plus-circled"></i>
-                    <i  className="eicon-minus-circled"></i>
+                    <i className="eicon-plus-circled"></i>
+                    <i className="eicon-minus-circled"></i>
                 </td>
                 <td><a href="/profile/{this.props.user.id}">{this.props.user.id}</a></td>
                 <td>{this.props.user.name}</td>

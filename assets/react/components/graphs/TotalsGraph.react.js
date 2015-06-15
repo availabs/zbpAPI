@@ -1,9 +1,7 @@
 'use strict';
 var React = require('react');
-var nv = require('../../../../node_modules/nvd3/nv.d3');
-var d3 = require('../../../../node_modules/d3/d3');
-
-
+var d3 = require('d3');
+var nv = require('../nvd3');
 
 var drawTotalGraph = function(variable, totals, zip) {
     if(totals == null || Object.keys(totals).length == 0) { 

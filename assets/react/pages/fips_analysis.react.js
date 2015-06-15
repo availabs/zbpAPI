@@ -86,7 +86,7 @@ var FipsAnalysis = React.createClass({
         });
     },
     render: function() {
-        console.log("fips analysis state", this.state);
+        // console.log("fips analysis state", this.state);
         return (
             <div>
                 <div className="row"> {/*Fips Search*/}

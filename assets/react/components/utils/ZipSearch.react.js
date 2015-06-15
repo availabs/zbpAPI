@@ -17,9 +17,7 @@ var ZipSearch = React.createClass({
     },
 
 	_newZip:function(e){
-
-		//console.log();
-		if(this.props.zips.indexOf(this.state.currentZip) >= 0) {
+		if(this.props.zips && this.props.zips.indexOf(this.state.currentZip) >= 0) {
 			//console.log('Legit Zip Code, sending to dispatch');
 			//console.log(this.state.currentZip);
 			ClientActionsCreator.setCurrentZipcode([this.state.currentZip]); //send as array bc that's how everything, including the API, wants it.

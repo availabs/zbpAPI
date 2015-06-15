@@ -76,6 +76,7 @@ var ZipAnalysis = React.createClass({
             chosenVariable: ZBPStore.getChosenVariable(),
             zipGeo: ZBPStore.getGeoJSON()
         });
+        // console.log("onchange called zip analysis", this.state.details)
        
     },
     render: function() {
@@ -90,7 +91,7 @@ var ZipAnalysis = React.createClass({
                     </div>
                     <div className="col-lg-4">
                         <section className="widget">
-                          <VariableSelect currentVariable = {this.state.chosenVariable} />
+                          <VariableSelect currentVariable={this.state.chosenVariable} />
                         </section>
                     </div>
                 </div>

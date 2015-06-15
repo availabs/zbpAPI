@@ -17,6 +17,7 @@
 var cssFilesToInject = [
   'styles/white/application.css',
   'styles/custom.css',
+  'styles/nvd3.css',
   'bower_components/leaflet/dist/leaflet.css'
 ];
 

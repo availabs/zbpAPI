@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.1",
-    "sweetalert": "~0.4.2"
+    "sweetalert": "~0.4.2",
+    "leaflet": "~0.7.3"
   }
 }

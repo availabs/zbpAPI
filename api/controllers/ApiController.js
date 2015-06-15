@@ -145,10 +145,10 @@ module.exports = {
 				res.json({data:simplifyList(response)})
 			});
 		}
-		if(!req.param('type')){
+		else if(!req.param('type')){
 			res.json({status:500,responseText:'Error, must specify type (state,county,metro) and fips'});
 		}
-		if(!parseInt(req.param('fips')) || !(req.param('fips').length == 2 || req.param('fips').length == 5 )) {
+		else if(!parseInt(req.param('fips')) || !(req.param('fips').length == 2 || req.param('fips').length == 5 )) {
 			res.json({status:500,responseText:'Error, invalid fips code (must be of length 2 or 5)'});
 		}
 		else { 
@@ -175,7 +175,7 @@ module.exports = {
 	naics_list : function(req, res){
 		var sql = '';
 		if(!req.param('ncode')) {
-			sql = 'Select naics from zbp.zbp_details group by naics order by naics';
+			sql = 'Select naics from zbp.zbp_details_sn group by naics order by naics';
 
 		}
 		else {
@@ -184,7 +184,7 @@ module.exports = {
 				res.json({status:500,responseText:'Error, invalid naics code'});
 			}
 			else {
-				sql = 'select naics from zbp.zbp_details where naics like \"' + ncode + '%\" group by naics order by naics';
+				sql = 'select naics from zbp.zbp_details_sn where naics like \"' + ncode + '%\" group by naics order by naics';
 			}
 			
 		}
@@ -377,10 +377,10 @@ module.exports = {
 							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
 								res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
 							}
-							sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+							sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details_sn where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 						}
 						else { //if the user wants the summed data
-							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
+							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details_sn where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 						}
 						
 						var request = bigQuery.jobs.query({
@@ -392,6 +392,7 @@ module.exports = {
 							},
 							function(err, response) {
 								if (err) res.json(err);
+
 								res.json({data:simplifyForDetails(response)})
 								//res.json({data:response})
 							});
@@ -412,10 +413,10 @@ module.exports = {
 				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
 					res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
 				}
-				sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+				sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details_sn where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
 			}
 			else { //if the user wants the summed data
-				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
+				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details_sn where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
 			}
 			
 			var request = bigQuery.jobs.query({
@@ -427,6 +428,7 @@ module.exports = {
 				},
 				function(err, response) {
 					if (err) res.json(err);
+
 					res.json({data:simplifyForDetails(response)})
 					//res.json({data:response})
 				});
