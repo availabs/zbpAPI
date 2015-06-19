@@ -34,12 +34,11 @@ module.exports = {
   initZip: function() {
     //console.log("\n\n\ninitZip called\n\n\n");
     currNaics = defaults.naics;
-
     this.zpbTotals(currZip, "annual_payroll", defaults.year);
     this.zpbTotals(currZip, "q1_payroll", defaults.year);
     this.zpbTotals(currZip, "employees", defaults.year);
     this.zpbTotals(currZip, "establishments", defaults.year);
-    
+
     this.zbpDetails(currZip, defaults.year, currNaics); //as optional params
 
     this.zbpGeo(currZip);
@@ -110,6 +109,7 @@ module.exports = {
       console.error("Non array passed to update Zip!");
     }
     else {
+      console.log("update zips called with ", zip);
       currZip = zip;
       this.zpbTotals(currZip, "annual_payroll", defaults.year);
       this.zpbTotals(currZip, "q1_payroll", defaults.year);
@@ -126,7 +126,7 @@ module.exports = {
     if(typeof naics == "string") {
       naics = naics.split(",")
     }
-    else if(!Array.isArray(naics)) { //no definite way to do this, bc js sucks
+    else if(!Array.isArray(naics)) { // no definite way to do this, bc js sucks
       console.error("Non array passed to updateNaics", naics);
     }
     currNaics = naics;
@@ -141,6 +141,7 @@ module.exports = {
       console.error("Incorrect type or code provided to updateFips: ", type, code);
     }
     else {
+      console.log("updateFips called with" , type, code);
       currFips[type] = code;
       this.zpbTotals({"type": type, "code": code}, "annual_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": code}, "q1_payroll", defaults.year);

@@ -115,9 +115,15 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     
     case ActionTypes.RECEIVE_TOTALS:
       //console.log("Action var", action.variable, "with data ", action.totals, "in ZBP store");
+      console.log(action);
       _totals[action.variable] = action.totals.data; //sets it based on whichever variable it is.
       _variable = action.variable; //still necessary?
-      _zip = action.codes;
+      if(typeof action.codes === "string") {
+        _zip = action.codes;
+      }
+      else if(Array.isArray(action.codes)) {
+        _zip = action.codes;
+      }
       zbpStore.emitChange();
     break;
     
@@ -125,7 +131,12 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       // if(action)
       //   console.log("receiving details", action);
       _details = action.details.data;
-      _zip = action.codes;
+      if(typeof action.codes === "string") {
+        _zip = action.codes;
+      }
+      else if(Array.isArray(action.codes)) {
+        _zip = action.codes[0];
+      }
       _naics = action.naics;
       zbpStore.emitChange();
     break;

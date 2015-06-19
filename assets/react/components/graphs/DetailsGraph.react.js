@@ -182,7 +182,7 @@ var Graph = React.createClass({
         }
         return (
         	<div>
-                <svg height={this.props.height} id="detailsGraph" />
+                <svg height={this.props.height} className="graph" id="detailsGraph" />
             </div>
         );
     }

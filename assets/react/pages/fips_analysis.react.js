@@ -28,7 +28,7 @@ var fixVarName = function(varName) {
 }
 
 var naicsGraphText = function(naicsList) {
-    console.log(naicsList);
+    // console.log(naicsList);
     if(naicsList == "")
         return "Top Ten Naics Codes by Employment";
     var toRet = "Employees for Naics Code";
@@ -59,7 +59,7 @@ var FipsAnalysis = React.createClass({
             totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
-            zip:ZBPStore.getZip(),
+            // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
             geo: ZBPStore.getGeoJSON()    
@@ -80,7 +80,7 @@ var FipsAnalysis = React.createClass({
             totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
-            zip:ZBPStore.getZip(),
+            // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
             geo: ZBPStore.getGeoJSON()  
