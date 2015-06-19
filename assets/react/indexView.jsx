@@ -18,7 +18,7 @@ var React = require('react'),
     ZipAnalysis = require('./pages/zip_analysis.react'),
     MetroAnalysis = require('./pages/metro_analysis.react'),
     CountyAnalysis = require('./pages/county_analysis.react'),
-    StateAnalysis = require('./pages/county_analysis.react'),
+    StateAnalysis = require('./pages/state_analysis.react'),
 
 // --- Server API
     sailsWebApi = require('./utils/api/SailsWebApi.js');

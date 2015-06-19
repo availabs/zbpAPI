@@ -28,6 +28,7 @@ var fixVarName = function(varName) {
 }
 
 var naicsGraphText = function(naicsList) {
+    console.log(naicsList);
     if(naicsList == "")
         return "Top Ten Naics Codes by Employment";
     var toRet = "Employees for Naics Code";
