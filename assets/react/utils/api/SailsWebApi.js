@@ -49,12 +49,13 @@ module.exports = {
       console.error("Incorrect type of fips in initFips: ", type);
     }
     else {
-      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
 
       this.zpbTotals({"type": type, "code": currFips[type]}, "annual_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "q1_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "employees", defaults.year);
       this.zpbTotals({"type": type, "code": currFips[type]}, "establishments", defaults.year);
+
+      this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
 
       this.zbpGeo({"type": type, "code": currFips[type]});
     }
@@ -104,7 +105,7 @@ module.exports = {
   updateZip: function(zip) {
     //console.log("Updating zip with new zip", zip);
     //add error checking of zip later?
-    if(!Array.isArray(zip)){
+    if(!Array.isArray(zip)) {
       console.error("Non array passed to update Zip!");
     }
     else {

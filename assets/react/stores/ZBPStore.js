@@ -88,8 +88,8 @@ var zbpStore = assign({}, EventEmitter.prototype, {
     return _variable;
   },
   getDetails: function() {
-    if(Object.keys(_details).length !== 0)
-      console.log("ZBPstore getting details" , _details);
+    // if(Object.keys(_details).length !== 0)
+    //   console.log("ZBPstore getting details" , _details);
     return _details;
   },
   getNaics: function() {
@@ -122,8 +122,8 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     break;
     
     case ActionTypes.RECEIVE_DETAILS:
-      if(action)
-        console.log("receiving details", action);
+      // if(action)
+      //   console.log("receiving details", action);
       _details = action.details.data;
       _zip = action.codes;
       _naics = action.naics;

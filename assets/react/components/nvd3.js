@@ -5360,6 +5360,7 @@ nv.models.lineChart = function() {
 
   function chart(selection) {
     selection.each(function(data) {
+
       var container = d3.select(this),
           that = this;
 
@@ -5373,7 +5374,7 @@ nv.models.lineChart = function() {
       chart.container = this;
 
       //set state.disabled
-      state.disabled = data.map(function(d) { return !!d.disabled });
+      // state.disabled = data.map(function(d) { return !!d.disabled }); // take it out so this works
 
 
       if (!defaultState) {

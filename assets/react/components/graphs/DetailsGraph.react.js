@@ -155,7 +155,7 @@ var Graph = React.createClass({
         }
     },
     render: function() {
-        
+        // console.log("Details drawing", this.props.zip, this.props.detailsData)
         if(this.props.zip){
             if(this.props.zip.constructor === Array) {
                 //console.log("zip is array!")

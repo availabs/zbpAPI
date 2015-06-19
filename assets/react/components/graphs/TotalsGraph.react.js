@@ -110,7 +110,7 @@ var parseTotalData = function(data, zip) {
             key: zip
         });
     }
-    //console.log("returning toRet from totals", toRet);
+    // console.log("returning toRet from totals", toRet);
     return toRet;
 };
 
@@ -123,21 +123,29 @@ var Graph = React.createClass({
         }
     },
     render: function() {
+        // console.log("totals drawing", this.props.zip, this.props.totalData)
         if(this.props.zip) {
             if(this.props.zip.constructor === Array) {
                 //console.log("zip is array!")
                 this.props.zip = this.props.zip[0];
             }
             //REWRITE THIS IF
-            if(this.props.variable && Object.keys(this.props.totalData).length > 0 && this.props.zip && Object.keys(this.props.totalData["2000"])[0] == this.props.zip){
+            if(
+                this.props.variable && 
+                Object.keys(this.props.totalData).length > 0 && 
+                Object.keys(this.props.totalData[Object.keys(this.props.totalData)[0]])[0] === this.props.zip
+            ){
+                // console.log("drawing graph ", this.props.totalData, this.props.zip)
                 drawTotalGraph(this.props.variable, this.props.totalData, this.props.zip);
                 //console.log("curr data for ", this.props.variable, " ", this.props.totalData)
             }
             else if(Object.keys(this.props.totalData).length > 0) {
-                //console.log("No current data render side for zip", this.props.zip, "for var", this.props.variable);
+                console.log("No current data render side for zip", this.props.zip, "for var", this.props.variable);
+                // console.log("")
             }
         }
         else {
+            // console.log("drawing multi graph");
             drawTotalGraph(this.props.variable, this.props.totalData, false);
         }
         return (
