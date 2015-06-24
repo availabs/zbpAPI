@@ -34,6 +34,7 @@ module.exports = {
   initZip: function() {
     //console.log("\n\n\ninitZip called\n\n\n");
     currNaics = defaults.naics;
+    currZip = defaults.zip;
     this.zpbTotals(currZip, "annual_payroll", defaults.year);
     this.zpbTotals(currZip, "q1_payroll", defaults.year);
     this.zpbTotals(currZip, "employees", defaults.year);

@@ -16,7 +16,9 @@
   <% if(typeof page == 'undefined'){page='';} %>
   <!-- <body class="background-dark"> -->
   <body class="background-dark <% if(page== 'docs'){%>docs<%}%>">
-    <%- body %>
+    <div id="route-wrapper">
+      <%- body %>
+    </div>
     <script src="/bower_components/sweetalert/lib/sweet-alert.min.js"></script>
     <!--SCRIPTS-->
     <script src="/bower_components/jquery/dist/jquery.js"></script>

@@ -23,7 +23,7 @@ var React = require('react'),
 // --- Server API
     sailsWebApi = require('./utils/api/SailsWebApi.js');
 
-// --- Initialize the API with the session User  
+// --- Initialize the API 
 sailsWebApi.init();
 
 //  --- Routes 
@@ -38,6 +38,5 @@ var routes = (
 );
 
 Router.run(routes, function (Handler) {
-  React.render(<Handler/>, document.body);
+  React.render(<Handler/>, document.getElementById("route-wrapper"));
 });
-

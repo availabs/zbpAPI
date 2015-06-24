@@ -119,7 +119,7 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       _totals[action.variable] = action.totals.data; //sets it based on whichever variable it is.
       _variable = action.variable; //still necessary?
       if(typeof action.codes === "string") {
-        _zip = action.codes;
+        _zip = [action.codes];
       }
       else if(Array.isArray(action.codes)) {
         _zip = action.codes;
