@@ -62,7 +62,8 @@ var FipsAnalysis = React.createClass({
             // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
-            geo: ZBPStore.getGeoJSON()    
+            geo: ZBPStore.getGeoJSON(),
+            fipsTable: ZBPStore.getFipsTable(this.props.type)
         };
     },
     componentDidMount: function() {
@@ -83,7 +84,8 @@ var FipsAnalysis = React.createClass({
             // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
-            geo: ZBPStore.getGeoJSON()  
+            geo: ZBPStore.getGeoJSON(),
+            fipsTable: ZBPStore.getFipsTable(this.props.type)
         });
     },
     render: function() {
@@ -93,7 +95,7 @@ var FipsAnalysis = React.createClass({
                 <div className="row"> {/*Fips Search*/}
                     <div className="col-lg-8">
                         <section className="widget">
-                            <FipsSearch currentFips={this.state.code} type={this.state.type} />
+                            <FipsSearch currentFips={this.state.code} type={this.state.type} fipsTable={this.state.fipsTable[this.props.type]} />
                         </section>
                     </div>
                     <div className="col-lg-4">

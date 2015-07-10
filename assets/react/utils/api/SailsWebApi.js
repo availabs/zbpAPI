@@ -219,6 +219,16 @@ module.exports = {
     io.socket.get('/zipcodes',function(resData){
       ServerActionCreators.receiveZipList(resData);
     });
+  },
+  countySics: function() {
+    io.socket.get('/countysics', function(resData) {
+      ServerActionCreators.receiveCountySics(resData);
+    });
+  },
+  stateSics: function() {
+    io.socket.get('/statesics', function(resData) {
+      ServerActionCreators.receiveStateSics(resData);
+    });
   }
 
 };

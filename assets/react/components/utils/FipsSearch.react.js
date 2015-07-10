@@ -7,6 +7,7 @@ var FipsSearch = React.createClass({
 	 getInitialState: function() {
       return {
       	currentFips: this.props.currentFips,
+      	fipsTable: this.props.fipsTable,
       	type: this.props.type
       };
     },
@@ -14,6 +15,7 @@ var FipsSearch = React.createClass({
     handleChange: function(e) {
       this.setState({
       	currentFips: e.target.value,
+      	fipsTable: this.props.fipsTable,
       	type: this.props.type
       });
     },

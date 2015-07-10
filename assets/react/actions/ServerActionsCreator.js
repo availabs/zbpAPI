@@ -65,6 +65,18 @@ module.exports = {
       naics: data
     });
   },
+  receiveStateFips: function(data) {
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.RECEIVE_STATEFIPS,
+      data: data
+    });
+  },
+  receiveCountyFips: function(data) {
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.RECEIVE_COUNTYFIPS,
+      data: data
+    });
+  },
   receiveTotals: function(varName, data, codes) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,

@@ -16,6 +16,7 @@
  */
 
 var googleapis = require('googleapis');
+var fs = require('fs');
 var jwt = new googleapis.auth.JWT(
 	'424930963222-s59k4k5usekp20guokt0e605i06psh0d@developer.gserviceaccount.com', 
 	'availwim.pem', 
@@ -201,6 +202,15 @@ module.exports = {
 				res.json({data:simplifyList(response)})
 		});
 		
+	},
+	/*
+		Utils
+	*/
+	county_sics: function(req,res) {
+		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/counties.json")));
+	},
+	state_sics: function(req,res) {
+		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/states.json")));
 	},
 	totals : function(req,res){
 		/*

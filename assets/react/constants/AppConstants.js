@@ -24,6 +24,8 @@ module.exports = {
     RECEIVE_DETAILS:null,
     RECEIVE_NAICS:null,
     RECEIVE_GEOJSON:null,
+    RECEIVE_STATEFIPS: null,
+    RECEIVE_COUNTYFIPS: null,
     //-------User--------------------------------------------
     RECEIVE_USERS: null,
     SET_SESSION_USER:null,

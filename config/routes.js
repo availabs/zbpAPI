@@ -20,6 +20,9 @@ module.exports.routes = {
   '/geozipcodes' : 'APIController.zipcode_geo',
   '/naics' : 'APIController.naics_list',     
   '/naics/:ncode' : 'APIController.naics_list',
+  '/countyfips': 'APIController.county_fips',
+  '/statefips': 'APIController.state_fips',
+
   '/totals' : 'APIController.totals',
   '/totals/:variable_name' : 'APIController.totals',
   '/totals/:variable_name/:year' : 'APIController.totals',
