@@ -59,6 +59,9 @@ module.exports = {
       this.zbpDetails({"type": type, "code": currFips[type]}, defaults.year, currFipsNaics);
 
       this.zbpGeo({"type": type, "code": currFips[type]});
+
+      // this.fipsTable("state");
+      // this.fipsTable("county");
     }
   },
 
@@ -220,15 +223,15 @@ module.exports = {
       ServerActionCreators.receiveZipList(resData);
     });
   },
-  countySics: function() {
-    io.socket.get('/countysics', function(resData) {
-      ServerActionCreators.receiveCountySics(resData);
-    });
-  },
-  stateSics: function() {
-    io.socket.get('/statesics', function(resData) {
-      ServerActionCreators.receiveStateSics(resData);
-    });
+  fipsTable: function(fipsType) {
+    if(fipsType === "metro") {
+      ServerActionCreators.receiveFips(fipsType, {});
+    }
+    else {
+      io.socket.get('/' + fipsType + 'fips', function(resData) {
+        ServerActionCreators.receiveFipsTable(fipsType, resData);
+      });
+    }
   }
 
 };

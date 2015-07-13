@@ -57,7 +57,6 @@ var ZipAnalysis = React.createClass({
                
     },
     componentDidMount: function() {
-        console.log("zip_analysis mounting");
         ClientActionsCreator.initZip();
         ZBPStore.addChangeListener(this._onChange);
     },
@@ -81,7 +80,7 @@ var ZipAnalysis = React.createClass({
        
     },
     render: function() {
-        console.log(this.state);
+    // console.log(this.state);
         return (
         	<div className="content container">
             	<h2 className="page-title">Zip Analysis <small>Business Statistics, Analyzed by Zip Code</small></h2>

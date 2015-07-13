@@ -95,7 +95,7 @@ var FipsAnalysis = React.createClass({
                 <div className="row"> {/*Fips Search*/}
                     <div className="col-lg-8">
                         <section className="widget">
-                            <FipsSearch currentFips={this.state.code} type={this.state.type} fipsTable={this.state.fipsTable[this.props.type]} />
+                            <FipsSearch currentFips={this.state.code} type={this.state.type} fipsTable={this.state.fipsTable} />
                         </section>
                     </div>
                     <div className="col-lg-4">

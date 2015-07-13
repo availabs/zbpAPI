@@ -206,10 +206,10 @@ module.exports = {
 	/*
 		Utils
 	*/
-	county_sics: function(req,res) {
+	county_fips: function(req,res) {
 		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/counties.json")));
 	},
-	state_sics: function(req,res) {
+	state_fips: function(req,res) {
 		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/states.json")));
 	},
 	totals : function(req,res){

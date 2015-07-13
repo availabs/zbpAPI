@@ -28,9 +28,9 @@ var _zipcodeList = [],
     _chosenVariable = "annual_payroll",
     _geoJSON = {},
     _fipsTable = {
-      "metro": [],
-      "county": [],
-      "state": []
+      "metro": {},
+      "county": {},
+      "state": {}
     },
     _fips = {
       "metro": "63217",
@@ -122,8 +122,6 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     break;
     
     case ActionTypes.RECEIVE_TOTALS:
-      //console.log("Action var", action.variable, "with data ", action.totals, "in ZBP store");
-      console.log(action);
       _totals[action.variable] = action.totals.data; //sets it based on whichever variable it is.
       _variable = action.variable; //still necessary?
       if(typeof action.codes === "string") {
@@ -169,7 +167,7 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
       _zip = [action.zipcode]; //bc zipcode is wanted as an array at some point
       zbpStore.emitChange();
     break;
-
+/*
     case ActionTypes.RECEIVE_STATEFIPS:
       _fipsTable["state"]= action.data;
       zbpStore.emitChange();
@@ -177,6 +175,11 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case ActionTypes.RECEIVE_COUNTYFIPS:
       _fipsTable["county"] = action.data;
+      zbpStore.emitChange();
+    break;*/
+
+    case ActionTypes.RECEIVE_FIPS_TABLE:
+      _fipsTable[action.fipsType] = action.fips;
       zbpStore.emitChange();
     break;
 

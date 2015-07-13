@@ -65,16 +65,11 @@ module.exports = {
       naics: data
     });
   },
-  receiveStateFips: function(data) {
+  receiveFipsTable: function(type, data) {
     AppDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_STATEFIPS,
-      data: data
-    });
-  },
-  receiveCountyFips: function(data) {
-    AppDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_COUNTYFIPS,
-      data: data
+      type: ActionTypes.RECEIVE_FIPS_TABLE,
+      fipsType: type,
+      fips: data
     });
   },
   receiveTotals: function(varName, data, codes) {
