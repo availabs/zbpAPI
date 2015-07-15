@@ -1,3 +1,5 @@
+/* @flow */
+
 /**
  * APIController
  *
@@ -15,43 +17,49 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var googleapis = require('googleapis');
-var fs = require('fs');
+var googleapis = require("googleapis"),
+	fs = require("fs");
+
 var jwt = new googleapis.auth.JWT(
-	'424930963222-s59k4k5usekp20guokt0e605i06psh0d@developer.gserviceaccount.com', 
-	'availwim.pem', 
-	'3d161a58ac3237c1a1f24fbdf6323385213f6afc', 
-	['https://www.googleapis.com/auth/bigquery']
+	"424930963222-s59k4k5usekp20guokt0e605i06psh0d@developer.gserviceaccount.com", 
+	"availwim.pem", 
+	"3d161a58ac3237c1a1f24fbdf6323385213f6afc", 
+	["https://www.googleapis.com/auth/bigquery"]
 );
 jwt.authorize();
-var bigQuery = googleapis.bigquery('v2');
+
+var bigQuery = googleapis.bigquery("v2");
+
+/*
+	Converts raw bigquery data to API details format.
+*/
 var simplifyForDetails = function(response) {
 	if(response == null) {
-		return {code:400, responseText:"Error in retrieving your query."}
+		return {code:400, responseText: "Error in retrieving your query."}
 	}
-	var sizes = ["total", "1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"];
-	var toReturn = {},
+	var sizes = ["total", "1-4","5-9","10-19","20-49","50-99","100-249","250-499","500-999","1000+"],
+		toReturn = {},
 		fields = response.schema.fields;
 
 	for(var row in response.rows) {
 		var rowVals = response.rows[row].f;
 
-		if(!toReturn[rowVals[0].v]) { //If this year doesn't exist in toRet yet.
+		if(!toReturn[rowVals[0].v]) { // If this year doesn't exist in toRet yet.
 			toReturn[rowVals[0].v] = {};
 		}
 
-		if(fields[0].name == 'year') { //if multiple years.
-			for(var i=3; i<rowVals.length; i++) { //starting from f_0 at 3
-				if(!toReturn[rowVals[0].v][rowVals[1].v]) { //if this zip doesn't exist in obj of yr yet
+		if(fields[0].name == "year") { // if multiple years.
+			for(var i=3; i<rowVals.length; i++) { // starting from f_0 at 3
+				if(!toReturn[rowVals[0].v][rowVals[1].v]) { // if this zip doesn't exist in obj of yr yet
 					toReturn[rowVals[0].v][rowVals[1].v] = {};
 				}
 				if(!toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v]) { //if this naics doesn't exist yet within the yr, then zip
 					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v] = {};
 				}
-				if(fields[i].name.charAt(0) == 'f') { //if it's a single val.
+				if(fields[i].name.charAt(0) == 'f') { // if it's a single val.
 					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v][sizes[i-3]] = rowVals[i].v;
 				}
-				else { //if it's the total.
+				else { // if it's the total.
 					toReturn[rowVals[0].v][rowVals[1].v][rowVals[2].v][fields[i].name] = rowVals[i].v;
 				}
 			}
@@ -61,11 +69,11 @@ var simplifyForDetails = function(response) {
 				if(!toReturn[rowVals[0].v][rowVals[1].v]) {
 					toReturn[rowVals[0].v][rowVals[1].v] = {};
 				}
-				if(fields[i].name.charAt(0) == 'b') {
+				if(fields[i].name.charAt(0) == "b") {
 					toReturn[rowVals[0].v][rowVals[1].v][sizes[i-2]] = rowVals[i].v;
 				}
 				else {
-					toReturn[rowVals[0].v][rowvals[1].v][fields[i].name] = rowVals[i].v;
+					toReturn[rowVals[0].v][rowVals[1].v][fields[i].name] = rowVals[i].v;
 				}
 			}
 		}
@@ -76,7 +84,7 @@ var simplifyForDetails = function(response) {
 
 var simplifyForTotals = function(response) {
 	if(response == null) {
-		return {code:400, responseText:"Error in retrieving your query."}
+		return {code:400, responseText: "Error in retrieving your query."}
 	}
 	var toReturn = {},
 		fields = response.schema.fields;
@@ -84,7 +92,7 @@ var simplifyForTotals = function(response) {
 	for(var row in response.rows){
 		var rowVals = response.rows[row].f;
 
-		if(fields[0].name == 'year') {
+		if(fields[0].name == "year") {
 			if(!toReturn[rowVals[0].v]) {
 				toReturn[rowVals[0].v] = {};
 			}
@@ -105,114 +113,127 @@ var simplifyList = function(response) {
 }
 
 var getFipsQuery = function(type, fips) {
-	var sql = '';
-	if(type === 'state'){
-		sql = 'SELECT geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_state as b ' + 
-			  'WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = \'' + fips + '\';';
+	var sql = "";
+	if(type === "state"){
+		sql = "SELECT geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_state as b " + 
+			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 		
 
 	}
-	else if(type === 'metro'){
-		sql = 'SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_uac10 as b ' +
-		      'WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid10 = \'' + fips + '\';';
+	else if(type === "metro"){
+		sql = "SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_uac10 as b " +
+		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
 
 	}
-	else if(type === 'county') {
-		sql = 'SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_county as b ' +
-			  'WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = \'' + fips + '\';';
+	else if(type === "county") {
+		sql = "SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_county as b " +
+			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 	}
 	return sql;
 }
 
-var validType = function(type) { return type === 'metro' || type === 'county' || type === 'state'; }
+var validType = function(type) { return type === "metro" || type === "county" || type === "state"; }
 
 module.exports = {
-    
-	zipcode_list : function(req,res){
-		var sql = '';
+    /*
+		Listing Routes
+    */
+	zipcode_list : function(req, res){
+		/*
+			/zipcodes/:type/:fips
+			type of:
+				metro,
+				county,
+				urban
+			Returns:
+				if a fips code + type is specified, an array of zipcodes within that fips
+				else, an array of all zipcodes.
+	    */
+		var sql = "";
 		
-		if(!req.param('fips')){
-			sql = 'Select zip from zbp.zbp_totals group by zip';
+		if(!req.param("fips")){
+			sql = "SELECT zip FROM zbp.zbp_totals GROUP BY zip;";
 			var request = bigQuery.jobs.query({
-				kind: 'bigquery#queryRequest',
-				projectId: 'avail-wim',
-				timeoutMs: '30000',
-				resource: {query:sql,projectId:'avail-wim'},
+				kind: "bigquery#queryRequest",
+				projectId: "avail-wim",
+				timeoutMs: "30000",
+				resource: { query: sql, projectId: "avail-wim" },
 				auth: jwt
 			},
 			function(err, response) {
 				if (err) res.json(err);
 
-				res.json({data:simplifyList(response)})
+				res.json({ data: simplifyList(response) });
 			});
 		}
-		else if(!req.param('type')){
-			res.json({status:500,responseText:'Error, must specify type (state,county,metro) and fips'});
+		else if(!req.param("type")){
+			res.json({ status: 500, responseText: "Error, must specify type (state,county,metro) and fips" });
 		}
-		else if(!parseInt(req.param('fips')) || !(req.param('fips').length == 2 || req.param('fips').length == 5 )) {
-			res.json({status:500,responseText:'Error, invalid fips code (must be of length 2 or 5)'});
+		else if(!parseInt(req.param("fips")) || !(req.param("fips").length == 2 || req.param("fips").length == 5)) {
+			res.json({ status: 500, responseText: "Error, invalid fips code (must be of length 2 or 5)" });
 		}
 		else { 
-			var fips = req.param('fips');
-			var type = req.param('type');
+			var fips = req.param("fips");
+			var type = req.param("type");
 			
 			if(!validType(type)) {
-				res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
+				res.json({ status: 500, responseText: "Error, invalid type (state,county,metro)." });
 			}
 			else {
-				Geocensus.query(getFipsQuery(type, fips),function(err, response){
+				Geocensus.query(getFipsQuery(type, fips), function(err, response){
 					if(err) res.json(err);
-					var data = response.rows.map(function(row) {
-							return row.geoid10;
-						});
+
 					res.json({
-						data: data
+						data: response.rows.map(function(row) {
+							return row.geoid10;
+						})
 					});
 				});
 			}
 		}
-
 	},
+
 	naics_list : function(req, res){
-		var sql = '';
-		if(!req.param('ncode')) {
-			sql = 'Select naics from zbp.zbp_details_sn group by naics order by naics';
+		/*
+			/naics/:ncode
+			Returns:
+				if a naics code is specified, array of all naics codes similar to it
+				else, array of all naics
+		*/
+		var sql = "";
+		if(!req.param("ncode")) {
+			sql = "SELECT naics FROM zbp.zbp_details_sn GROUP BY naics ORDER BY naics;";
 
 		}
 		else {
-			var ncode = req.param('ncode');
+			var ncode = req.param("ncode");
 			if(ncode.length > 6) {
-				res.json({status:500,responseText:'Error, invalid naics code'});
+				res.json({ status: 500, responseText: "Error, invalid naics code" });
 			}
 			else {
-				sql = 'select naics from zbp.zbp_details_sn where naics like \"' + ncode + '%\" group by naics order by naics';
+				sql = "SELECT naics FROM zbp.zbp_details_sn WHERE naics LIKE \"" + ncode + "%\" GROUP BY naics ORDER BY naics;";
 			}
 			
 		}
 		var request = bigQuery.jobs.query({
-				kind: 'bigquery#queryRequest',
-				projectId: 'avail-wim',
-				timeoutMs: '30000',
-				resource: {query:sql,projectId:'avail-wim'},
+				kind: "bigquery#queryRequest",
+				projectId: "avail-wim",
+				timeoutMs: "30000",
+				resource: { query: sql, projectId: "avail-wim" },
 				auth: jwt
 			},
 			function(err, response) {
 				if (err) res.json(err);
 
-				res.json({data:simplifyList(response)})
+				res.json({ data: simplifyList(response) })
 		});
 		
 	},
+
 	/*
-		Utils
+		Primary Data Routes
 	*/
-	county_fips: function(req,res) {
-		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/counties.json")));
-	},
-	state_fips: function(req,res) {
-		res.json(JSON.parse(fs.readFileSync(__dirname + "/../data/states.json")));
-	},
-	totals : function(req,res){
+	totals : function(req, res){
 		/*
 			/totals/:variable_name/:year
 			POST :zips or :fips
@@ -222,182 +243,263 @@ module.exports = {
 				employees
 				establishments
 			years from 1994 to 2012
+			Returns: 
+				{
+				    "data": {
+				        "99516": 1308,
+				        "99517": 1819
+				    }
+				}
+				else
+				{
+				    "data": {
+				        "1994": {
+				            "99516": 1656,
+				            "99517": 3078
+				        },
+				        "1995": {
+				            "99516": 1760,
+				            "99517": 3082
+				        },
+				        ...
+				    }
+				} (if no year specified)	
 		*/
+
 		var validateVarName = function(varName) {
-			return varName == 'annual_payroll'||
-				   varName == 'q1_payroll'||
-				   varName == 'employees'||
-				   varName == 'establishments';
-		}
+			return varName == "annual_payroll" ||
+				   varName == "q1_payroll" ||
+				   varName == "employees" ||
+				   varName == "establishments";
+		};
 
 		var fixVarName = function(varName) {
 			switch(varName) {
-				case 'annual_payroll':
-					return 'ap'; break;
-				case 'q1_payroll':
-					return 'qp1'; break;
-				case 'employees':
-					return 'emp'; break;
-				case 'establishments':
-					return 'est'; break;
+				case "annual_payroll":
+					return "ap"; break; // I guess these breaks are redundant/unreachable.
+				case "q1_payroll":
+					return "qp1"; break;
+				case "employees":
+					return "emp"; break;
+				case "establishments":
+					return "est"; break;
 			}
-		}
+		};
+
 		var codes = [];
-		if(!req.param('variable_name')) {
-			res.json({status:500,responseText:'Error, must pass variable name, see documentation.'});
+		if(!req.param("variable_name")) {
+			res.json({ status: 500, responseText: "Error, must pass variable name, see documentation." });
 		}
-		else if(!validateVarName(req.param('variable_name'))) {
-			res.json({status:500,responseText:'Error, invalid variable name, see documentation.'});
+		else if(!validateVarName(req.param("variable_name"))) {
+			res.json({ status: 500, responseText: "Error, invalid variable name, see documentation." });
 		}
 		
-		else if(!req.param('zips') && !req.param('fips')) {
-			res.json({status:500,responseText:'Error, must pass fips code or array of zip codes.'});
+		else if(!req.param("zips") && !req.param("fips")) {
+			res.json({ status: 500, responseText: "Error, must pass fips code or array of zip codes." });
 		}
-		else if(req.param('zips') && req.param('fips')) {
-			res.json({status:500,responseText:'Error, only pass either fips or zips.'})
+		else if(req.param("zips") && req.param("fips")) {
+			res.json({ status: 500, responseText: "Error, only pass either fips or zips." });
 		}
-		else if(req.param('fips')) {
-			var fips = req.param('fips');
+		else if(req.param("fips")) {
+			var fips = req.param("fips");
 			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
-				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
+				res.json({ status: 500, responseText: "Error, must pass FIPS object with attributes type and code." });
 			}
-			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
-				res.json({status:500,responseText:'Error, type and code must be Strings.'});
+			else if(typeof fips.type != "string" || typeof fips.code != "string") {
+				res.json({ status: 500, responseText: "Error, type and code must be Strings." });
 			}
 			else {
 				var fipsCode = fips.code, type = fips.type;
 				if(!validType(type)) {
-					res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
+					res.json({ status: 500, responseText: "Error, invalid type (state,county,metro)." });
 				}
 				else {
-					Geocensus.query(getFipsQuery(type, fipsCode),function(err, response){
+					Geocensus.query(getFipsQuery(type, fipsCode), function(err, response) {
 						if(err) res.json(err);
+
 						codes = response.rows.map(function(row) {
-								return row.geoid10;
-							}); //b/c async sucks but also doesn't suck
-						if(codes == []) {
-							res.json({data:null});
+							return row.geoid10;
+						}); 
+
+						if(codes === []) {
+							res.json({ data: null });
 						}
-						codes = JSON.stringify(codes).replace('[', '').replace(']', '');
-						var sql = '';
-						var varName = fixVarName(req.param('variable_name'));
-						if(req.param('year')) { //If no year is passed, get summed data.
-							var year = req.param('year');
-							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
-								res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
+						codes = JSON.stringify(codes).replace("[", "").replace("]", "");
+						var sql = "";
+						var varName = fixVarName(req.param("variable_name"));
+						if(req.param("year")) { // If no year is passed, get summed data.
+							var year = req.param("year");
+							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
+								res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 							}
-							sql = 'select zip, ' + varName + ' from zbp.zbp_totals where zip in (' + codes + ') and year = "' + year + '" group by zip, emp, ' + varName + ' order by zip';
+							sql = "SELECT zip, " + varName + " FROM zbp.zbp_totals WHERE zip IN (" + codes + ") AND year = \"" + year + "\" GROUP BY zip, emp, " + varName + " ORDER BY zip;";
 						}
-						else { //TODO: TYPE SAFETY. 
-							sql = 'select year, zip, sum(' + varName + ') from zbp.zbp_totals where zip in (' + codes + ') group by year, zip, ' + varName + ' order by year, zip';	
+						else { 
+							sql = "SELECT year, zip, sum(" + varName + ") FROM zbp.zbp_totals WHERE zip IN (" + codes + ") GROUP BY year, zip, " + varName + " ORDER BY year, zip;";	
 						}
 						
 						var request = bigQuery.jobs.query({
-							kind: 'bigquery#queryRequest',
-							projectId: 'avail-wim',
-							timeoutMs: '30000',
-							resource: {query:sql,projectId:'avail-wim'},
+							kind: "bigquery#queryRequest",
+							projectId: "avail-wim",
+							timeoutMs: "30000",
+							resource: { query: sql, projectId: "avail-wim" },
 							auth: jwt
 						},
 						function(err, response) {
 							if (err) res.json(err);
 							
-							res.json({data:simplifyForTotals(response)})
+							res.json({ data: simplifyForTotals(response) });
 						});
-	
 					});
 				}
 			}
 		}
-		else if(req.param('zips')) {
-			codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']', '');
-			var sql = '';
-			var varName = fixVarName(req.param('variable_name'));
-			if(req.param('year')) { //If no year is passed, get summed data.
-				var year = req.param('year');
-				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
-					res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
+		else if(req.param("zips")) {
+			codes = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "");
+			var sql = "";
+			var varName = fixVarName(req.param("variable_name"));
+
+			if(req.param("year")) { // If no year is passed, get summed data.
+				var year = req.param("year");
+				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
+					res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 				}
-				sql = 'select zip, ' + varName + ' from zbp.zbp_totals where zip in (' + codes + ') and year = ' + year + ' group by zip, emp, ' + varName + ' order by zip';
+				sql = "SELECT zip, " + varName + " FROM zbp.zbp_totals WHERE zip IN (" + codes + ") AND year = " + year + " GROUP BY zip, emp, " + varName + " ORDER BY zip;";
 			}
-			else { //TODO: TYPE SAFETY. 
-				sql = 'select year, zip, sum(' + varName + ') from zbp.zbp_totals where zip in (' + codes + ') group by year, zip, ' + varName + ' order by year, zip';	
+			else { 
+				sql = "SELECT year, zip, sum(" + varName + ") FROM zbp.zbp_totals WHERE zip IN (" + codes + ") GROUP BY year, zip, " + varName + " ORDER BY year, zip;";	
 			}
+
 			var request = bigQuery.jobs.query({
-				kind: 'bigquery#queryRequest',
-				projectId: 'avail-wim',
-				timeoutMs: '30000',
-				resource: {query:sql,projectId:'avail-wim'},
+				kind: "bigquery#queryRequest",
+				projectId: "avail-wim",
+				timeoutMs: "30000",
+				resource: { query:sql,projectId:"avail-wim" },
 				auth: jwt
 			},
 			function(err, response) {
 				if (err) res.json(err);
 			
-				res.json({data:simplifyForTotals(response)})
+				res.json({ data:simplifyForTotals(response) });
 			});
 		}
-		
 	},
-	details : function(req,res){
-		var sql = '';
+
+	details : function(req, res){
+		/*
+			/details/:year
+			POST naics and (zips or fips)
+			years from 1994 to 2012
+			returns:
+				{
+				    "data": {
+				        "95014": {
+				            "total": "134",
+				            "1-4": "29",
+				            "5-9": "24",
+				            "10-19": "38",
+				            "20-49": "30",
+				            "50-99": "11",
+				            "100-249": "2",
+				            "250-499": "0",
+				            "500-999": "0",
+				            "1000+": "0"
+				        },
+				        ...
+				    }
+				}
+				else
+				{
+				    "data": {
+				        "1994": {
+				            "95014": {
+				                "total": "52",
+				                "1-4": "33",
+				                "5-9": "9",
+				                "10-19": "7",
+				                "20-49": "1",
+				                "50-99": "1",
+				                "100-249": "1",
+				                "250-499": "0",
+				                "500-999": "0",
+				                "1000+": "0"
+				            },
+				            "95050": {
+				                "total": "43",
+				                "1-4": "25",
+				                "5-9": "11",
+				                "10-19": "5",
+				                "20-49": "2",
+				                "50-99": "0",
+				                "100-249": "0",
+				                "250-499": "0",
+				                "500-999": "0",
+				                "1000+": "0"
+				            }
+				        },        ...
+				    }
+				}
+				if no year specified
+		*/
+		var sql = "";
 		var codes = null;
-		if(!req.param('naics') || req.param('naics').length == 0 || !Array.isArray(req.param('naics'))) {
-			res.json({status:500,responseText:'Error, must pass array of naics codes'});
+		if(!req.param("naics") || req.param("naics").length == 0 || !Array.isArray(req.param("naics"))) {
+			res.json({ status: 500, responseText: "Error, must pass array of naics codes" });
 		}
-		if(!req.param('fips') && !req.param('zips')) {
-			res.json({status:500,responseText:'Error, must pass zips or fips codes'});
+		if(!req.param("fips") && !req.param("zips")) {
+			res.json({ status: 500, responseText: "Error, must pass zips or fips codes" });
 		}
-		else if(req.param('fips') && req.param('zips')) {
-			res.json({status:500,responseText:'Error, only pass either fips or zips.'})
+		else if(req.param("fips") && req.param("zips")) {
+			res.json({ status: 500, responseText: "Error, only pass either fips or zips." });
 		}
-		else if(req.param('fips')) {
-			var fips = req.param('fips');
+		else if(req.param("fips")) {
+			var fips = req.param("fips");
 			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
-				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
+				res.json({ status: 500, responseText: "Error, must pass FIPS object with attributes type and code." });
 			}
-			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
-				res.json({status:500,responseText:'Error, type and code must be Strings.'});
+			else if(typeof fips.type != "string" || typeof fips.code != "string") {
+				res.json({ status: 500, responseText: "Error, type and code must be Strings." });
 			}
-			else if(req.param('naics').indexOf('') != -1 || req.param('naics').indexOf(' ') != -1) {
-				res.json({status:500,responseText:'Error, cannot pass empty naics codes with fips'})
+			else if(req.param("naics").indexOf("") != -1 || req.param("naics").indexOf(" ") != -1) {
+				res.json({ status: 500, responseText: "Error, cannot pass empty naics codes with fips"});
 			}
 			else {
 				var fipsCode = fips.code, type = fips.type;
 				if(!validType(type)) {
-					res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
+					res.json({ status: 500, responseText: "Error, invalid type (state,county,metro)." });
 				}
 				else {
 					Geocensus.query(getFipsQuery(type, fipsCode),function(err, response){
 						if(err) res.json(err);
-						//return response;
-						codes = response.rows.map(function(row) {
-								return row.geoid10;
-							});
-						codes = JSON.stringify(codes).replace('[', '').replace(']', '');
 
-						var naics = req.param('naics');
-						var naicsString = 'and (naics like "' + naics[0] + '%" ';
+						codes = response.rows.map(function(row) {
+							return row.geoid10;
+						});
+						codes = JSON.stringify(codes).replace("[", "").replace("]", "");
+
+						var naics = req.param("naics");
+						var naicsString = "AND (naics LIKE \"" + naics[0] + "%\" ";
 						for(var i=1; i<naics.length; i++) {
-							naicsString += 'or naics like "' + naics[i] + '%" ';
+							naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
 						}
 						naicsString += ") ";
 
-						if(req.param('year')) {
-							var year = req.param('year');
-							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
-								res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
+						if(req.param("year")) {
+							var year = req.param("year");
+							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
+								res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 							}
-							sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details_sn where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+							sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details_sn WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
 						}
 						else { //if the user wants the summed data
-							sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details_sn where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
+							sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details_sn WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 						}
 						
 						var request = bigQuery.jobs.query({
-								kind: 'bigquery#queryRequest',
-								projectId: 'avail-wim',
-								timeoutMs: '30000',
-								resource: {query:sql,projectId:'avail-wim'},
+								kind: "bigquery#queryRequest",
+								projectId: "avail-wim",
+								timeoutMs: "30000",
+								resource: {query:sql,projectId:"avail-wim"},
 								auth: jwt
 							},
 							function(err, response) {
@@ -410,107 +512,112 @@ module.exports = {
 				}
 			}
 		}
-		else if(req.param('zips')) {
-			codes = JSON.stringify(req.param('zips')).replace('[', '').replace(']', '');					
-			var naics = req.param('naics');
-			var naicsString ='and (naics like "' + naics[0] + '%" ';
+		else if(req.param("zips")) {
+			codes = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "");					
+			var naics = req.param("naics");
+			var naicsString ="AND (naics LIKE \"" + naics[0] + "%\" ";
 			for(var i=1; i<naics.length; i++) {
-				naicsString += 'or naics like "' + naics[i] + '%" ';
+				naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
 			}
 			naicsString += ") ";
-			if(req.param('year')) {	
-				var year = req.param('year');
-				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { //if invalid year
-					res.json({status:500,responseText:'Error, invalid year, should be from 1994 to 2012.'});
+			if(req.param("year")) {	
+				var year = req.param("year");
+				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
+					res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 				}
-				sql = 'select zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 from zbp.zbp_details_sn where year = "' + year + '" and zip in(' + codes + ') ' + naicsString + ' group by zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 order by zip';
+				sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details_sn WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
 			}
-			else { //if the user wants the summed data
-				sql = 'select year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) from zbp.zbp_details_sn where zip in(' + codes + ') ' + naicsString + ' group by year, zip, naics order by year, zip';
+			else { // if the user wants the summed data
+				sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details_sn WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 			}
 			
 			var request = bigQuery.jobs.query({
-					kind: 'bigquery#queryRequest',
-					projectId: 'avail-wim',
-					timeoutMs: '30000',
-					resource: {query:sql,projectId:'avail-wim'},
+					kind: "bigquery#queryRequest",
+					projectId: "avail-wim",
+					timeoutMs: "30000",
+					resource: { query: sql, projectId: "avail-wim" },
 					auth: jwt
 				},
 				function(err, response) {
 					if (err) res.json(err);
 
-					res.json({data:simplifyForDetails(response)})
-					//res.json({data:response})
+					res.json( { data: simplifyForDetails(response) } );
 				});
 		}
 		
 		
 	},
 
-	//--------------------------------------------------------------------------------------
-	// Geography Functions
-	//--------------------------------------------------------------------------------------
+	/*
+		Geography Functions
+	*/
 	
-	zipcode_geo : function(req,res){
-		//add error checking iff the zips array isn't actually an array
-		var sql = '';
+	zipcode_geo : function(req, res){
+		/*
+			/geozipcodes
+			POST zips or fips
+			returns:
+				geojson for each zip code in zips
+				or
+				geojson for fip (provide type)
+		*/
 
-		if(!req.param('fips') && !req.param('zips')) {
-			res.json({status:500,responseText:'Error, must pass zips or fips codes'});
+		var sql = "";
+
+		if(!req.param("fips") && !req.param("zips")) {
+			res.json({ status: 500, responseText:"Error, must pass zips or fips codes" });
 		}
-		if(req.param('zips') && req.param('fips')) {
-			res.json({status:500,responseText:'Error, only pass either zips or fips.'})
+		if(req.param("zips") && req.param("fips")) {
+			res.json({ status: 500, responseText: "Error, only pass either zips or fips." });
 		}
-		else if(req.param('fips')) {
-			var fips = req.param('fips');
+		else if(req.param("fips")) {
+			var fips = req.param("fips");
 
 			if(!(fips.hasOwnProperty("type") && fips.hasOwnProperty("code"))) {
-				res.json({status:500,responseText:'Error, must pass FIPS object with attributes type and code.'});
+				res.json({ status: 500, responseText: "Error, must pass FIPS object with attributes type and code." });
 			}
-			else if(typeof fips.type != 'string' || typeof fips.code != 'string') {
-				res.json({status:500,responseText:'Error, type and code must be Strings.'});
+			else if(typeof fips.type != "string" || typeof fips.code != "string") {
+				res.json({ status: 500, responseText: "Error, type and code must be Strings." });
 			}
 			else if(!validType(fips.type)) {
-				res.json({status:500,responseText:'Error, invalid type (state,county,metro).'});
+				res.json({ status: 500, responseText: "Error, invalid type (state,county,metro)." });
 			}
 			else {
-				var fipsCode = fips.code;
-				var fipsType = fips.type;
+				var fipsCode = fips.code, fipsType = fips.type;
 				switch(fipsType) {
-					case 'metro': //uac
-						sql = 'SELECT ST_ASGeoJSON(geom) as geom FROM tl_2013_us_uac10 WHERE geoid10 = \'' + fipsCode + '\';';
+					case "metro": 
+						sql = "SELECT ST_ASGeoJSON(geom) AS geom FROM tl_2013_us_uac10 WHERE geoid10 = \'" + fipsCode + "\';";
 					break;
-					case 'state':
-						sql = 'SELECT ST_ASGeoJSON(the_geom) as geom FROM tl_2013_us_state WHERE geoid = \''+ fipsCode + '\';';
+					case "state":
+						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom FROM tl_2013_us_state WHERE geoid = \'"+ fipsCode + "\';";
 					break;
-					case 'county':
-						sql = 'SELECT ST_ASGeoJSON(the_geom) as geom FROM tl_2013_us_county WHERE geoid = \'' + fipsCode + '\';';
+					case "county":
+						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom FROM tl_2013_us_county WHERE geoid = \'" + fipsCode + "\';";
 					break;
 					default:
-						sql = '';
+						sql = "";
 				}
-
 			}
 		}
 		else {
-			var zips = JSON.stringify(req.param('zips')).replace('[', '').replace(']','').replace(new RegExp('[\"]', 'g'), '\'');
+			var zips = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "").replace(new RegExp("[\"]", "g"), "\'");
 			// var sql="SELECT ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom) as geom, 
 			// string_agg(zip.geoid10,',') as zip_codes 
 			// FROM tl_2013_us_uac10 as ua ,tl_2013_us_zcta510 as zip
 			// where ST_Overlaps(ua.geom, zip.geom) and ua.name10 like '%NY%' 
 			// group by  ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom)";
-			sql = "Select ST_ASGeoJSON(geom) as geom,geoid10 from tl_2013_us_zcta510 where geoid10 in (" + zips + ")";
+			sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM tl_2013_us_zcta510 WHERE geoid10 IN (" + zips + ")";
 			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
 			
 		}
 		
-		Geocensus.query(sql,function(err,data){
+		Geocensus.query(sql,function(err, data) {
 			if(err) res.json(err);
 
 			var geoJSON = {};
 			geoJSON.type = "FeatureCollection";
 			geoJSON.features = [];
-			data.rows.forEach(function(row,index){
+			data.rows.forEach(function(row, index) {
 				var feature = {};
 				feature.type ="Feature";
 				feature.properties = {};

@@ -65,13 +65,6 @@ module.exports = {
       naics: data
     });
   },
-  receiveFipsTable: function(type, data) {
-    AppDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_FIPS_TABLE,
-      fipsType: type,
-      fips: data
-    });
-  },
   receiveTotals: function(varName, data, codes) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_TOTALS,

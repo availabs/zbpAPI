@@ -27,11 +27,6 @@ var _zipcodeList = [],
     _naicsList = [],
     _chosenVariable = "annual_payroll",
     _geoJSON = {},
-    _fipsTable = {
-      "metro": {},
-      "county": {},
-      "state": {}
-    },
     _fips = {
       "metro": "63217",
       "county": "36061",
@@ -79,9 +74,6 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getNaicsList: function() {
     return _naicsList;
-  },
-  getFipsTable: function(type) { 
-    return _fipsTable[type];
   },
   getZip: function() {
     return _zip;
@@ -165,21 +157,6 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
     case ActionTypes.SET_CURRENT_ZIPCODE:
       //console.log(action);
       _zip = [action.zipcode]; //bc zipcode is wanted as an array at some point
-      zbpStore.emitChange();
-    break;
-/*
-    case ActionTypes.RECEIVE_STATEFIPS:
-      _fipsTable["state"]= action.data;
-      zbpStore.emitChange();
-    break;
-
-    case ActionTypes.RECEIVE_COUNTYFIPS:
-      _fipsTable["county"] = action.data;
-      zbpStore.emitChange();
-    break;*/
-
-    case ActionTypes.RECEIVE_FIPS_TABLE:
-      _fipsTable[action.fipsType] = action.fips;
       zbpStore.emitChange();
     break;
 
