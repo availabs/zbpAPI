@@ -113,7 +113,7 @@ module.exports = {
       console.error("Non array passed to update Zip!");
     }
     else {
-      console.log("update zips called with ", zip);
+      // console.log("update zips called with ", zip);
       currZip = zip;
       this.zpbTotals(currZip, "annual_payroll", defaults.year);
       this.zpbTotals(currZip, "q1_payroll", defaults.year);
@@ -145,7 +145,7 @@ module.exports = {
       console.error("Incorrect type or code provided to updateFips: ", type, code);
     }
     else {
-      console.log("updateFips called with" , type, code);
+      // console.log("updateFips called with" , type, code);
       currFips[type] = code;
       this.zpbTotals({"type": type, "code": code}, "annual_payroll", defaults.year);
       this.zpbTotals({"type": type, "code": code}, "q1_payroll", defaults.year);

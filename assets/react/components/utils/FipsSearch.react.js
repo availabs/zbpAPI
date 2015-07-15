@@ -20,16 +20,15 @@ var FipsSearch = React.createClass({
       	type: this.props.type
       };
     },
-
-    handleChange: function(e) {
-		this.setState({
-			currentFips: e.target.value,
-			// fipsTable: this.props.fipsTable,
-			type: this.props.type
-		});
-		if(this.state.type === "metro") {
+    _newFips: function(e) {
+    	if(this.state.type === "metro") {
 			if(this.state.currentFips && this.state.currentFips.length == 5) {
 				ClientActionsCreator.setCurrentFips(this.state.type, this.state.currentFips);
+				this.setState({
+					currentFips: e.target.value,
+					// fipsTable: this.props.fipsTable,
+					type: this.props.type
+				});
 			}
 			else {
 				swal({
@@ -40,6 +39,27 @@ var FipsSearch = React.createClass({
 					allowOutsideClick: true
 				});
 			}
+		}
+    },
+    handleChange: function(e) {
+		this.setState({
+			currentFips: e.target.value,
+			// fipsTable: this.props.fipsTable,
+			type: this.props.type
+		});
+		if(this.state.type === "metro") {
+			/*if(this.state.currentFips && this.state.currentFips.length == 5) {
+				ClientActionsCreator.setCurrentFips(this.state.type, this.state.currentFips);
+			}
+			else {
+				swal({
+					title: "Invalid FIPS Code!",
+					text: "Please try again.",
+					type: "warning",
+					showCancelButton: false,
+					allowOutsideClick: true
+				});
+			}*/
 		}
 		else {
 		  ClientActionsCreator.setCurrentFips(this.state.type, e.target.value);
@@ -91,7 +111,7 @@ var FipsSearch = React.createClass({
 			                  placeholder="Search by FIPS..."/>
 
 			   			<div className="input-group-btn">
-	                        <button type="button" className="btn btn-primary" ><i className="fa fa-search"></i></button>
+	                        <button type="button" onClick={this._newFips} className="btn btn-primary" ><i className="fa fa-search"></i></button>
 	                    </div>
 	                </div>
 	            </div>
