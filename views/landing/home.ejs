@@ -17,9 +17,6 @@
           <a href="/">API Documentation</a>
         </li>
         <li>
-          <a href="/examples">Examples</a>
-        </li>
-        <li>
           <a href="/zip_analysis/">Interactive</a>
         </li>
        
@@ -89,12 +86,17 @@
 
               </div>
 
-              <h3 id="geo-geo">/zipgeo/:fips</h3>
-              <p class="tab">Returns a topojson of some geography.</p>
+              <h3 id="geo-geo">/geozipcodes</h3>
+              <p class="tab">Returns a topojson of either the POSTed array of zipcodes or the POSTed fips code.</p>
 
               <div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>
               <div class="highlight">
-                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/zipgeo </span></code></pre>
+                 <pre><code class="language-html" data-lang="html"><span class="cp">http://zbpa.api.availabs.org/geozipcodes</span>
+<span class="s">required</span> <span class="nt">POST</span>: 
+<span class="na">zips - An array of zip codes ex {"zips": ["95014","95050"]} </span> 
+or
+<span class="na">fips- An object with attributes of FIPS code type (metro, county, or state) and FIPS code ex {"fips":{"type": "metro", "code": "63217"}}</span>
+                 </code></pre>
 
               </div>
 
