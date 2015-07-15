@@ -2,6 +2,7 @@
 var React = require('react');
 var d3 = require('d3');
 var nv = require('../nvd3');
+var NaicsKey = require('../utils/NaicsKey');
 
 var drawDetailGraph = function(details, zip) {
     //console.log("Data received", details);
@@ -26,6 +27,12 @@ var drawDetailGraph = function(details, zip) {
             var chart = nv.models.lineChart()
                 .margin({left:60})
                 .useInteractiveGuideline(false)
+                .tooltipContent(function(key, x, y, graph) {
+                    return "<h3>" + key + " " + 
+                    (NaicsKey[key] != null && NaicsKey[key] != undefined && NaicsKey[key].title ? ": " + NaicsKey[key].title : "")
+                    + "</h3>" + 
+                    "<p>" + y + " employees in " + x; 
+                })
                 .transitionDuration(350)
                 .showLegend(false)
                 .showYAxis(true)

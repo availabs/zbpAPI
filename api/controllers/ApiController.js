@@ -202,7 +202,7 @@ module.exports = {
 		*/
 		var sql = "";
 		if(!req.param("ncode")) {
-			sql = "SELECT naics FROM zbp.zbp_details_sn GROUP BY naics ORDER BY naics;";
+			sql = "SELECT naics FROM zbp.zbp_details GROUP BY naics ORDER BY naics;";
 
 		}
 		else {
@@ -211,7 +211,7 @@ module.exports = {
 				res.json({ status: 500, responseText: "Error, invalid naics code" });
 			}
 			else {
-				sql = "SELECT naics FROM zbp.zbp_details_sn WHERE naics LIKE \"" + ncode + "%\" GROUP BY naics ORDER BY naics;";
+				sql = "SELECT naics FROM zbp.zbp_details WHERE naics LIKE \"" + ncode + "%\" GROUP BY naics ORDER BY naics;";
 			}
 			
 		}
@@ -489,10 +489,10 @@ module.exports = {
 							if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
 								res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 							}
-							sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details_sn WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
+							sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
 						}
 						else { //if the user wants the summed data
-							sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details_sn WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
+							sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 						}
 						
 						var request = bigQuery.jobs.query({
@@ -525,10 +525,10 @@ module.exports = {
 				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
 					res.json({ status: 500, responseText: "Error, invalid year, should be from 1994 to 2012." });
 				}
-				sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details_sn WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
+				sql = "SELECT zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 FROM zbp.zbp_details WHERE year = \"" + year + "\" AND zip IN (" + codes + ") " + naicsString + " GROUP BY zip, naics, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10 ORDER BY zip;";
 			}
 			else { // if the user wants the summed data
-				sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details_sn WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
+				sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 			}
 			
 			var request = bigQuery.jobs.query({

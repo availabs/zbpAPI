@@ -13,7 +13,7 @@ var defaults = {
   zip: ["10001"],
   year: "",
   naics: [""],
-  fipsNaics: ["62----"], //this is b/c can't query empty naics with fips
+  fipsNaics: ["722511"], //this is b/c can't query empty naics with fips
   metroFips: "63217",
   countyFips: "36061",
   stateFips: "36"

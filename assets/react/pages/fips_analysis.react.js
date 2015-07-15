@@ -59,7 +59,6 @@ var FipsAnalysis = React.createClass({
             totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
-            // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
             geo: ZBPStore.getGeoJSON()
@@ -80,7 +79,6 @@ var FipsAnalysis = React.createClass({
             totals:ZBPStore.getTotals(),
             variable:ZBPStore.getVariable(),
             details:ZBPStore.getDetails(),
-            // zip:ZBPStore.getZip(),
             naics:ZBPStore.getNaics(), 
             chosenVariable: ZBPStore.getChosenVariable(),
             geo: ZBPStore.getGeoJSON()

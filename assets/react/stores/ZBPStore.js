@@ -89,7 +89,8 @@ var zbpStore = assign({}, EventEmitter.prototype, {
   },
   getDetails: function() {
     // if(Object.keys(_details).length !== 0)
-    //   console.log("ZBPstore getting details" , _details);
+    // console.log("ZBPstore getting details" , _details);
+    
     return _details;
   },
   getNaics: function() {
@@ -156,7 +157,7 @@ zbpStore.dispatchToken = AppDispatcher.register(function(payload) {
 
     case ActionTypes.SET_CURRENT_ZIPCODE:
       //console.log(action);
-      _zip = [action.zipcode]; //bc zipcode is wanted as an array at some point
+      _zip = [action.zipcode]; // bc zipcode is wanted as an array at some point
       zbpStore.emitChange();
     break;
 
