@@ -356,6 +356,8 @@ module.exports = {
 		}
 		else if(req.param("zips")) {
 			codes = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "");
+			console.log('ZIPs total',req.param("zips"),codes)
+			
 			var sql = "";
 			var varName = fixVarName(req.param("variable_name"));
 
@@ -370,6 +372,7 @@ module.exports = {
 				sql = "SELECT year, zip, sum(" + varName + ") FROM zbp.zbp_totals WHERE zip IN (" + codes + ") GROUP BY year, zip, " + varName + " ORDER BY year, zip;";	
 			}
 
+			console.log('ZIP TOTAL SQL:',sql);
 			var request = bigQuery.jobs.query({
 				kind: "bigquery#queryRequest",
 				projectId: "avail-wim",
@@ -443,9 +446,9 @@ module.exports = {
 		*/
 		var sql = "";
 		var codes = null;
-		if(!req.param("naics") || req.param("naics").length == 0 || !Array.isArray(req.param("naics"))) {
-			res.json({ status: 500, responseText: "Error, must pass array of naics codes" });
-		}
+		// if(!req.param("naics") || req.param("naics").length == 0 || !Array.isArray(req.param("naics"))) {
+		// 	res.json({ status: 500, responseText: "Error, must pass array of naics codes" });
+		// }
 		if(!req.param("fips") && !req.param("zips")) {
 			res.json({ status: 500, responseText: "Error, must pass zips or fips codes" });
 		}
@@ -460,9 +463,9 @@ module.exports = {
 			else if(typeof fips.type != "string" || typeof fips.code != "string") {
 				res.json({ status: 500, responseText: "Error, type and code must be Strings." });
 			}
-			else if(req.param("naics").indexOf("") != -1 || req.param("naics").indexOf(" ") != -1) {
-				res.json({ status: 500, responseText: "Error, cannot pass empty naics codes with fips"});
-			}
+			// else if(req.param("naics").indexOf("") != -1 || req.param("naics").indexOf(" ") != -1) {
+			// 	res.json({ status: 500, responseText: "Error, cannot pass empty naics codes with fips"});
+			// }
 			else {
 				var fipsCode = fips.code, type = fips.type;
 				if(!validType(type)) {
@@ -477,12 +480,15 @@ module.exports = {
 						});
 						codes = JSON.stringify(codes).replace("[", "").replace("]", "");
 
-						var naics = req.param("naics");
-						var naicsString = "AND (naics LIKE \"" + naics[0] + "%\" ";
-						for(var i=1; i<naics.length; i++) {
-							naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
+						var naicsString = '';
+						if(req.param("naics")){				
+							var naics = req.param("naics");
+							var naicsString ="AND (naics LIKE \"" + naics[0] + "%\" ";
+							for(var i=1; i<naics.length; i++) {
+								naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
+							}
+							naicsString += ") ";
 						}
-						naicsString += ") ";
 
 						if(req.param("year")) {
 							var year = req.param("year");
@@ -494,7 +500,7 @@ module.exports = {
 						else { //if the user wants the summed data
 							sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 						}
-						
+						console.log('fips detail sql:',sql)
 						var request = bigQuery.jobs.query({
 								kind: "bigquery#queryRequest",
 								projectId: "avail-wim",
@@ -513,13 +519,16 @@ module.exports = {
 			}
 		}
 		else if(req.param("zips")) {
-			codes = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "");					
-			var naics = req.param("naics");
-			var naicsString ="AND (naics LIKE \"" + naics[0] + "%\" ";
-			for(var i=1; i<naics.length; i++) {
-				naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
+			codes = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "");
+			var naicsString = '';
+			if(req.param("naics")){				
+				var naics = req.param("naics");
+				var naicsString ="AND (naics LIKE \"" + naics[0] + "%\" ";
+				for(var i=1; i<naics.length; i++) {
+					naicsString += "OR naics LIKE \"" + naics[i] + "%\" ";
+				}
+				naicsString += ") ";
 			}
-			naicsString += ") ";
 			if(req.param("year")) {	
 				var year = req.param("year");
 				if((!parseInt(year) && !(parseInt(year) > 1993 && parseInt(year) < 2013))) { // if invalid year
@@ -530,7 +539,7 @@ module.exports = {
 			else { // if the user wants the summed data
 				sql = "SELECT year, zip, naics, sum(b1), sum(b2), sum(b3), sum(b4), sum(b5), sum(b6), sum(b7), sum(b8), sum(b9), sum(b10) FROM zbp.zbp_details WHERE zip IN (" + codes + ") " + naicsString + " GROUP BY year, zip, naics ORDER BY year, zip;";
 			}
-			
+			console.log(' details sql : ',sql)
 			var request = bigQuery.jobs.query({
 					kind: "bigquery#queryRequest",
 					projectId: "avail-wim",
