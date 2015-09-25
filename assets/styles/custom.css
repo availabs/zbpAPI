@@ -21,6 +21,17 @@ body.background-dark.docs{
 	top:13px;
 }
 
+.navbar2 .navbar-inner{
+	background-color: @dark-bg;
+    background-image: none;
+	border: none;
+	border-radius: 0;
+    border-bottom: 2px solid @dark-bg;
+    min-height: 40px;
+    padding: 10px 20px 12px;
+	box-shadow: 0 -3px 2px 0 #3E4C51 inset;
+}
+
 .postText {
 	padding-left: 15px;
 }

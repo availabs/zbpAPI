@@ -1465,12 +1465,12 @@ textarea {
 
 /* line 48, ../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 a {
-  color: #4d9dd7;
+  color: #fff;
   text-decoration: none;
 }
 /* line 52, ../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 a:hover, a:focus {
-  color: #2877b0;
+  color: #000;
   text-decoration: underline;
 }
 /* line 58, ../../../bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
