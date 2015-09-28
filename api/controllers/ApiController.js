@@ -115,18 +115,18 @@ var simplifyList = function(response) {
 var getFipsQuery = function(type, fips) {
 	var sql = "";
 	if(type === "state"){
-		sql = "SELECT geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_state as b " + 
+		sql = "SELECT geoid10 FROM cb_2014_us_zcta510_500k as a, tl_2013_us_state as b " + 
 			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 		
 
 	}
 	else if(type === "metro"){
-		sql = "SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_uac10 as b " +
-		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
+		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_csa_500k as b " +
+		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
 
 	}
 	else if(type === "county") {
-		sql = "SELECT a.geoid10 FROM tl_2013_us_zcta510 as a, tl_2013_us_county as b " +
+		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, tl_2013_us_county as b " +
 			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 	}
 	return sql;
@@ -595,7 +595,7 @@ module.exports = {
 				var fipsCode = fips.code, fipsType = fips.type;
 				switch(fipsType) {
 					case "metro": 
-						sql = "SELECT ST_ASGeoJSON(geom) AS geom FROM tl_2013_us_uac10 WHERE geoid10 = \'" + fipsCode + "\';";
+						sql = "SELECT ST_ASGeoJSON(geom) AS geom FROM cb_2014_us_csa_500k WHERE geoid10 = \'" + fipsCode + "\';";
 					break;
 					case "state":
 						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom FROM tl_2013_us_state WHERE geoid = \'"+ fipsCode + "\';";
@@ -612,11 +612,11 @@ module.exports = {
 			var zips = JSON.stringify(req.param("zips")).replace("[", "").replace("]", "").replace(new RegExp("[\"]", "g"), "\'");
 			// var sql="SELECT ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom) as geom, 
 			// string_agg(zip.geoid10,',') as zip_codes 
-			// FROM tl_2013_us_uac10 as ua ,tl_2013_us_zcta510 as zip
+			// FROM cb_2014_us_csa_500k as ua ,cb_2014_us_zcta510_500k as zip
 			// where ST_Overlaps(ua.geom, zip.geom) and ua.name10 like '%NY%' 
 			// group by  ua.geoid10, ua.name10, ua.namelsad10,ua.uatyp10, ST_ASGeoJSON(ua.geom)";
-			sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM tl_2013_us_zcta510 WHERE geoid10 IN (" + zips + ")";
-			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM tl_2013_us_zcta510"
+			sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_zcta510_500k WHERE geoid10 IN (" + zips + ")";
+			//var sql = "SELECT geoid10, aland10, ST_ASGeoJSON(geom) as geom FROM cb_2014_us_zcta510_500k"
 			
 		}
 		
