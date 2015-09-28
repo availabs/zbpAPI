@@ -1,6 +1,66 @@
 <link rel="stylesheet" href="/styles/docs.css">
 <!-- Docs master nav -->
-<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+
+<div class="navbar2 navbar-fixed-top navbar-default">
+  <div class="container">
+    <div class="navbar2">
+      <button class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://availabs.org/"><img src="/images/logo.png"></a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse">
+      <!--<ul class="nav navbar-nav">
+        <li>
+          <a href="/">API Documentation</a>
+        </li>
+        <li>
+          <a href="/zip_analysis/">Interactive</a>
+        </li> 
+      </ul>-->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://availabs.org/" target=_blank>Home</a></li>
+        <li><a href="http://availabs.org/about" target=_blank>About</a></li>
+        <li><a href="http://availabs.org/project" target=_blank>Projects</a></li>
+        <li><a href="http://availabs.org/api" target=_blank>APIs</a></li>
+        <li><a href="http://blog.availabs.org/" target=_blank>Blog</a></li>
+        <!-- <li class="dropdown"><a href="/about" class="dropdown-toggle" data-toggle="dropdown">About  <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a href="/faq">F.A.Q.</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="http://blog.availabs.org/" target=_blank>Blog</a></li>
+            <li class="divider"></li>
+            <li><a href="/blog-single">Blog single one</a></li>
+            <li><a href="/blog-single2">Blog single two</a></li>
+          </ul>
+        </li>
+        <li><a href="http://blog.availabs.org/" target=_blank>Blog</a></li>
+        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Gallery <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/gallery">Simple gallery</a></li>
+            <li><a href="/gallery_text">With text</a></li>
+            <li class="divider"></li>
+            <li><a href="/project">Single project</a></li>
+          </ul>
+        </li>
+        <li><a href="/shortcodes">Shortcodes</a>
+        </li>-->
+      </ul>
+    </div>  
+  </div>  
+</div>
+
+<!--<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
   <div class="container">
     <div class="navbar-header">
       <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -31,9 +91,15 @@
 <!-- Docs page layout -->
 <div class="bs-docs-header" id="content">
    <div class="container">
-      <h1>API Documentation</h1>
-      <p class="tab">A REST API for accessing the <a href="http://www.census.gov/econ/cbp/">Census Zip Business Patterns</a> dataset from 1994-2012.</p>
+      <div class="col-md-8">
+      <h1>Zip Business Patterns</h1>
+      <p>A REST API for accessing the <a href="http://www.census.gov/econ/cbp/">Census Zip Business Patterns</a> dataset from 1994-2012.</p>
+      </div>
+      <div class="col-md-4">
+      <a href="http://www.kauffman.org/" target='blank'><img src="/images/kauffman.png"></a>
+      </div>
    </div>
+
 </div>
 <div class="container bs-docs-container">
    <div class="row">
@@ -341,7 +407,7 @@ or
 
 
       <div class="col-md-3" role="complementary">
-         <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top">
+         <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm" style="position:fixed">
             <ul class="nav bs-docs-sidenav">
                <li class="">
                   <a href="#overview">Overview</a>
