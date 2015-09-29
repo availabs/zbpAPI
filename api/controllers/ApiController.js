@@ -595,13 +595,13 @@ module.exports = {
 				var fipsCode = fips.code, fipsType = fips.type;
 				switch(fipsType) {
 					case "metro": 
-						sql = "SELECT ST_ASGeoJSON(geom) AS geom FROM cb_2014_us_csa_500k WHERE geoid10 = \'" + fipsCode + "\';";
+						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_csa_500k WHERE geoid10 = \'" + fipsCode + "\';";
 					break;
 					case "state":
-						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom FROM tl_2013_us_state WHERE geoid = \'"+ fipsCode + "\';";
+						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom,geoid10 FROM tl_2013_us_state WHERE geoid = \'"+ fipsCode + "\';";
 					break;
 					case "county":
-						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom FROM tl_2013_us_county WHERE geoid = \'" + fipsCode + "\';";
+						sql = "SELECT ST_ASGeoJSON(the_geom) AS geom,geoid10 FROM tl_2013_us_county WHERE geoid = \'" + fipsCode + "\';";
 					break;
 					default:
 						sql = "";
@@ -631,6 +631,7 @@ module.exports = {
 				feature.type ="Feature";
 				feature.properties = {};
 				feature.properties.id = index;
+				feature.properties.geoid = row.geoid10;
 				//feature.properties.geoid = row.geoid10;
 				feature.geometry = JSON.parse(row.geom);
 				geoJSON.features.push(feature);
