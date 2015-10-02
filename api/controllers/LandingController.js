@@ -10,8 +10,14 @@ module.exports = {
 	flux:function(req,res){
 		res.view({})
 	},
+	
 	home:function(req,res){
 		res.view({page:'docs'});
+	},
+
+	kaufvis:function(req,res){
+		res.locals.layout = 'vis_layout';
+		res.view({})
 	}
 	
 };

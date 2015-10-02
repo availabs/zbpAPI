@@ -14,6 +14,7 @@ module.exports.routes = {
   //-------------------------------
 
   '/':'LandingController.home',
+  '/metrovis':'LandingController.kaufvis',
 
   '/zipcodes' : 'APIController.zipcode_list', //No fips params
   '/zipcodes/:type/:fips' : 'APIController.zipcode_list',
