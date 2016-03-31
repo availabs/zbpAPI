@@ -43,7 +43,8 @@ var naicsGraphText = function(naicsList) {
 
 var fixTypeName = function(type) {
     switch(type) {
-        case "metro": return "Urban Area"; break;
+        case "metro": return "Metro Area"; break;
+        case "combinedArea": return "Combined Statistical Area"; break;
         case "county": return "County"; break;
         case "state": return "State"; break;
         default: return "Urban Area";

@@ -117,12 +117,15 @@ var getFipsQuery = function(type, fips) {
 	if(type === "state"){
 		sql = "SELECT geoid10 FROM cb_2014_us_zcta510_500k as a, tl_2013_us_state as b " + 
 			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
-		
+	}
+	else if(type === "csa"){
+		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_csa_500k as b " +
+		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
 
 	}
 	else if(type === "metro"){
-		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_csa_500k as b " +
-		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
+		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_cbsa_500k as b " +
+		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid = '" + fips + "';";
 
 	}
 	else if(type === "county") {
@@ -595,6 +598,9 @@ module.exports = {
 				var fipsCode = fips.code, fipsType = fips.type;
 				switch(fipsType) {
 					case "metro": 
+						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_cbsa_500k WHERE geoid = \'" + fipsCode + "\';";
+					break;
+					case "csa": 
 						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_csa_500k WHERE geoid10 = \'" + fipsCode + "\';";
 					break;
 					case "state":

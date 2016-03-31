@@ -12,10 +12,10 @@ var React = require('react'),
     FipsAnalysis = require('./fips_analysis.react'),
     ZipCodeMap = require('../components/maps/ZipCodeMap.react');
 
-var MetroAnalysis = React.createClass({
+var CombinedAreaAnalysis = React.createClass({
 	getInitialState: function() {
 		return {
-			code: ZBPStore.getFips("metro")
+			code: ZBPStore.getFips("combinedArea")
 		};
 	},
 	
@@ -29,17 +29,17 @@ var MetroAnalysis = React.createClass({
 
 	_onChange: function() {
 		/*this.setState({
-			code: ZBPStore.getFips("metro")
+			code: ZBPStore.getFips("combinedArea")
 		});*/
 	},
 	render: function() {
 		return (
 			<div className="content container">
-				<h2 className="page-title">Metro Area Analysis <small>Business Statistics, Analyzed by Metro Area</small></h2>
-				<FipsAnalysis type="metro" code={this.state.code} />
+				<h2 className="page-title">Combined Statistical Area Analysis <small>Business Statistics, Analyzed by Combined Statistical Area</small></h2>
+				<FipsAnalysis type="combinedArea" code={this.state.code} />
 			</div>
 			
 		);
 	}
 });
-module.exports = MetroAnalysis;
+module.exports = CombinedAreaAnalysis;
