@@ -135,7 +135,7 @@ var getFipsQuery = function(type, fips) {
 	return sql;
 }
 
-var validType = function(type) { return type === "metro" || type === "county" || type === "state"; }
+var validType = function(type) { return type === "metro" || type === "csa" || type === "county" || type === "state"; }
 
 module.exports = {
     /*
