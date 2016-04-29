@@ -598,7 +598,7 @@ module.exports = {
 				var fipsCode = fips.code, fipsType = fips.type;
 				switch(fipsType) {
 					case "metro": 
-						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_cbsa_500k WHERE geoid = \'" + fipsCode + "\';";
+						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid FROM cb_2014_us_cbsa_500k WHERE geoid = \'" + fipsCode + "\';";
 					break;
 					case "csa": 
 						sql = "SELECT ST_ASGeoJSON(geom) AS geom,geoid10 FROM cb_2014_us_csa_500k WHERE geoid10 = \'" + fipsCode + "\';";
