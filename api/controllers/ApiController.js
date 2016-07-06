@@ -116,21 +116,21 @@ var getFipsQuery = function(type, fips) {
 	var sql = "";
 	if(type === "state"){
 		sql = "SELECT geoid10 FROM cb_2014_us_zcta510_500k as a, tl_2013_us_state as b " + 
-			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
+			  "WHERE ST_ContainsProperly(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 	}
 	else if(type === "csa"){
 		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_csa_500k as b " +
-		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
+		      "WHERE ST_ContainsProperly(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
 
 	}
 	else if(type === "metro"){
 		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_cbsa_500k as b " +
-		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid = '" + fips + "';";
+		      "WHERE ST_ContainsProperly(b.geom, a.geom) AND b.geoid = '" + fips + "';";
 
 	}
 	else if(type === "county") {
 		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, tl_2013_us_county as b " +
-			  "WHERE ST_CONTAINS(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
+			  "WHERE ST_ContainsProperly(b.the_geom, a.geom) AND b.geoid = '" + fips + "';";
 	}
 	return sql;
 }
