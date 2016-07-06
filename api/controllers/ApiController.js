@@ -120,12 +120,12 @@ var getFipsQuery = function(type, fips) {
 	}
 	else if(type === "csa"){
 		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_csa_500k as b " +
-		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
+		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid10 = '" + fips + "';";
 
 	}
 	else if(type === "metro"){
 		sql = "SELECT a.geoid10 FROM cb_2014_us_zcta510_500k as a, cb_2014_us_cbsa_500k as b " +
-		      "WHERE ST_INTERSECTS(b.geom, a.geom) AND b.geoid = '" + fips + "';";
+		      "WHERE ST_CONTAINS(b.geom, a.geom) AND b.geoid = '" + fips + "';";
 
 	}
 	else if(type === "county") {
@@ -575,7 +575,7 @@ module.exports = {
 		*/
 
 		var sql = "";
-
+		console.log('new test 1', req.param('fips'), req.param('zips'))
 		if(!req.param("fips") && !req.param("zips")) {
 			res.json({ status: 500, responseText:"Error, must pass zips or fips codes" });
 		}
@@ -612,6 +612,7 @@ module.exports = {
 					default:
 						sql = "";
 				}
+				console.log('test', fipsType, fipsCode, sql)
 			}
 		}
 		else {
