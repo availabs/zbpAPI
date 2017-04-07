@@ -38,7 +38,7 @@ module.exports.connections = {
   
   geocensus: {
     adapter: 'sails-postgresql',
-    host: 'lor.availabs.org',
+    host: 'demeter.availabs.org',
     user: 'postgres',
     password: 'transit',
     database: 'geocensus'
